@@ -1,0 +1,29 @@
+\section{Regulatorische und Datenschutz-Anforderungen}
+\label{sec:regulatorik}
+
+Bei der Konzeption der IT-Architektur sind regulatorische, gesetzliche und
+unternehmensinterne Vorgaben zu berücksichtigen. Für den vorliegenden Entwurf
+werden insbesondere die folgenden Anforderungen betrachtet:
+
+\medskip
+\noindent\textbf{Regionale Datentrennung}\par\nobreak
+Für die Zielarchitektur wird angenommen, dass Kundendaten abhängig von
+Rechtsraum, Verarbeitungszweck und konzerninternen Vorgaben regional getrennt
+verarbeitet werden müssen. Dies betrifft beispielsweise die Segregation
+europäischer und nordamerikanischer Datenräume.
+
+\medskip
+\noindent\textbf{Solvency II}\par\nobreak
+Das europäische Aufsichtssystem verlangt eine nachvollziehbare Ermittlung und
+Bereitstellung von Solvenzkennzahlen, darunter die Solvenzkapitalanforderung
+(Solvency Capital Requirement, SCR). Daraus ergeben sich hohe Anforderungen an
+Datenqualität, Data Governance, Nachvollziehbarkeit und Historisierung
+\citep{euSolvencyII}.
+
+\medskip
+\noindent\textbf{Datenschutz}\par\nobreak
+Bei Gesundheitsdaten und bestimmten Telemetriedaten kann es sich um besonders
+schützenswerte personenbezogene Daten handeln. Ihre Verarbeitung erfordert
+unter anderem Zweckbindung, Datenminimierung, angemessene Zugriffskontrollen
+sowie je nach Anwendungsfall Anonymisierungs- oder
+Pseudonymisierungsmaßnahmen \citep{euGDPR}.

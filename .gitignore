@@ -1,0 +1,72 @@
+# ------------------------------------------------------------
+# LaTeX: build artifacts / Nebenprodukte
+# ------------------------------------------------------------
+
+# Core
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.lol
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+
+# Intermediate / misc
+*.tmp
+*.bak
+*.swp
+*.swo
+*.err
+*.vrb
+*.xdv
+*.dvi
+*.ps
+
+# Bibliography (BibTeX/Biber)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Indices
+*.idx
+*.ilg
+*.ind
+
+# Glossaries / acronyms
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.ist
+*.xdy
+
+# Hyperref / bookmarks
+*.brf
+*.nav
+*.snm
+
+# TikZ/PGF externalization
+*tikzExternalized*
+
+# minted (Pygments)
+_minted*
+*.pyg
+
+# LaTeXmk / build dirs
+latexmk-out/
+build/
+out/
+
+# macOS
+.DS_Store
+
+# Erzeugte PDF-Dateien
+*.pdf
