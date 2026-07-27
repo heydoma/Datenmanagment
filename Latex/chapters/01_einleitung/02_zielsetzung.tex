@@ -3,16 +3,19 @@
 
 Ziel der vorliegenden Hausarbeit ist die Entwicklung einer ganzheitlichen
 Zielarchitektur für ein analytisches Informationssystem der Allianz
-SE. Anhand einer hybriden Datenarchitektur aus Operational Data Store (ODS),
-Data Lake und relationalem Data Warehouse (DWH) wird aufgezeigt, wie komplexe
-Datenflüsse strukturiert, verarbeitet und für unterschiedliche
-Informationsbedarfe bereitgestellt werden können
-\citep{schulz2024}.
+SE. Im Mittelpunkt steht die Frage, wie eine analytische Datenarchitektur
+gestaltet sein muss, um heterogene Daten mit unterschiedlichen Anforderungen
+an Aktualität, Strukturierung, Historisierung und Datenschutz für operative
+und analytische Informationsbedarfe bereitzustellen. Ausgehend von den
+fachlichen und technischen Anforderungen werden geeignete
+Architekturkomponenten untersucht, voneinander abgegrenzt und zu einem
+begründeten Zielbild zusammengeführt \citep{schulz2024}.
 
-Zur Demonstration der praktischen Anwendbarkeit werden zwei konkrete
-Fachanwendungsfälle in die Architektur integriert: die Betrugserkennung bei
-Kfz-Schäden sowie die Vorhersage kündigungsgefährdeter Kundinnen und Kunden in
-der privaten Krankenversicherung. Ergänzend wird für die
-Kundenabwanderungsanalyse ein exemplarisches dimensionales Datenmodell nach
-dem Kimball-Sternschema entworfen und durch eine zugehörige
-ETL-/ELT-Pipeline ergänzt \citep{kimball2013,gerlachSchulz2026}.
+Als fachliche Grundlage dienen zwei konkrete Anwendungsfälle: die
+Betrugserkennung bei Kfz-Schäden sowie die Vorhersage kündigungsgefährdeter
+Kundinnen und Kunden in der privaten Krankenversicherung. Anhand dieser
+Anwendungsfälle wird geprüft, inwieweit das entwickelte Zielbild operative und
+analytische Anforderungen abdecken kann. Ergänzend werden für die
+Kundenabwanderungsanalyse ein exemplarisches dimensionales Datenmodell und
+eine zugehörige Datenaufbereitungspipeline konzipiert
+\citep{kimball2013,gerlachSchulz2026}.
