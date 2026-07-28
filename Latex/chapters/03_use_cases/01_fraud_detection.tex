@@ -3,10 +3,11 @@
 
 \subsection{Zielsetzung und fachlicher Kontext}
 
-Der erste spezifische Data-Science-Use-Case, der durch die zu entwickelnde
+Der erste betrachtete Anwendungsfall, der durch die zu entwickelnde
 Datenarchitektur abgedeckt werden soll, ist die KI-gestützte
-Betrugserkennung bei Kfz-Schadensfällen. Versicherungsbetrug verursacht
-erhebliche finanzielle Schäden. Zugleich erleichtern Fortschritte bei
+Betrugserkennung bei Kfz-Schadensfällen
+\citep[Folie~11]{nordakademieSzenarioVersicherung}. Versicherungsbetrug
+verursacht erhebliche finanzielle Schäden. Zugleich erleichtern Fortschritte bei
 generativer KI die Erstellung hochwertiger gefälschter Schadensfotos und
 anderer Nachweise. Durch die breite Verfügbarkeit leistungsfähiger KI-Modelle
 sind dafür zunehmend keine besonderen technischen Kenntnisse mehr
@@ -14,10 +15,13 @@ erforderlich \citep{hever2025}.
 
 Um die finanziellen Verluste durch Betrug zu begrenzen, soll ein KI-Modell alle
 für den Schadenfall relevanten Informationen verarbeiten und das Risiko eines
-Betrugsversuchs einschätzen. Das Ergebnis dient ausschließlich der
+Betrugsversuchs einschätzen
+\citep{debener2023,nordakademieSzenarioVersicherung}. Das Ergebnis dient
+ausschließlich der
 Entscheidungsunterstützung. Ob eine Schadensmeldung abgelehnt oder vertieft
 geprüft wird, entscheiden weiterhin die zuständigen Mitarbeitenden im
-Schadenmanagement \citep{debener2023,nordakademieSzenarioVersicherung}.
+Schadenmanagement
+\citep[Folie~11]{nordakademieSzenarioVersicherung}.
 
 \subsection{Architekturrelevante Anforderungen}
 
@@ -27,13 +31,14 @@ einschließlich ihrer EXIF-Metadaten. Historische Schaden- und bestätigte
 Betrugsfälle sowie gegebenenfalls externe Fraud-Datenbanken bilden die
 Trainingsgrundlage. Wetter-, Geo- und Kaufkraftdaten sowie optional verfügbare
 Fahrzeugtelemetrie ergänzen diese Bestände, um Ort, Zeitpunkt und Plausibilität
-eines gemeldeten Schadens zu prüfen.
+eines gemeldeten Schadens zu prüfen
+\citep[Folie~11]{nordakademieSzenarioVersicherung}.
 
 Das vollständige Datenprofil mit Struktur, Aktualität, Speicherdauer und
 Analysebedarf ist in Tabelle~\ref{tab:daten-fraud} im Anhang dargestellt
 \citep[Folien~11--12]{nordakademieSzenarioVersicherung}.
 
-Damit verbindet der Use Case strukturierte, semi-strukturierte und
+Damit verbindet der Anwendungsfall strukturierte, semi-strukturierte und
 unstrukturierte Daten mit unterschiedlichen Aktualitätsanforderungen.
 Fallbezogene Daten müssen zeitnah verarbeitet werden, während historische
 Bestände langfristig für Training und Nachvollziehbarkeit verfügbar bleiben.
