@@ -70,3 +70,6 @@ out/
 
 # Erzeugte PDF-Dateien
 *.pdf
+
+# Unveränderte Quelldokumente
+!quellen/Szenario3_Versicherung_Allianz.pdf

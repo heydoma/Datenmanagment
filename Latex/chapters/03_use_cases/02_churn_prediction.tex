@@ -1,2 +1,39 @@
-\section{Vorhersage kündigungsgefährdeter KV-Kunden}
+\section{Vorhersage kündigungsgefährdeter KV-Kundinnen und -Kunden}
 \label{sec:churn}
+
+\subsection{Zielsetzung und fachlicher Kontext}
+
+Der zweite Use Case unterstützt Vertrieb und Kundenbetreuung in der privaten
+Krankenversicherung. Ein Modell soll die Kündigungswahrscheinlichkeit von
+Bestandskundinnen und -kunden bestimmen, wesentliche Einflussfaktoren
+ausweisen und gefährdete Fälle für Rückhaltemaßnahmen priorisieren. Als
+fachliches Ziel nennt das Anforderungsszenario eine Verringerung der
+Kündigungsquote um 10\,\% gegenüber dem Vorjahreszeitraum
+\citep{spiteri2018,nordakademieSzenarioVersicherung}. Dieser Zielwert ist im
+späteren Betrieb zu validieren und stellt kein bereits erzieltes Ergebnis dar.
+
+\subsection{Architekturrelevante Anforderungen}
+
+Die Prognose nutzt vor allem Vertragsdaten zu Laufzeit, Beitragsentwicklung
+und Tarifwechseln; historische Kündigungen und Neuabschlüsse liefern die
+Trainingsgrundlage. Kunden-, CRM- und Zahlungsdaten bilden bisherige
+Interaktionen, Beschwerden und Zahlungsverhalten ab. Ergänzend werden
+aggregierte Leistungsabrechnungen sowie sozioökonomische Kontextdaten
+einbezogen.
+
+Das vollständige Datenprofil mit Struktur, Aktualität, Speicherdauer und
+Analysebedarf ist in Tabelle~\ref{tab:daten-churn} im Anhang dargestellt
+\citep[Folien~17--18]{nordakademieSzenarioVersicherung}.
+
+Die Quellen sind überwiegend strukturiert und werden kontinuierlich oder
+hochaktuell aktualisiert. Für Training und Ursachenanalyse müssen historische
+Stände erhalten bleiben; die Kundenbetreuung benötigt aktuelle
+Modellergebnisse. Gesundheitsbezogene Leistungsdaten sind zu minimieren und
+streng zu schützen. Training und Anwendung des Modells müssen innerhalb des
+jeweils zulässigen regionalen Datenraums erfolgen
+\citep{euGDPR}.
+
+Aus den fachlichen Zielen und den unterschiedlichen Anforderungen an
+Struktur, Aktualität, Schutz und Historisierung der Daten werden in
+Kapitel~\ref{chap:architektur} die benötigten Architekturkomponenten
+abgeleitet und zu einer ganzheitlichen Zielarchitektur zusammengeführt.

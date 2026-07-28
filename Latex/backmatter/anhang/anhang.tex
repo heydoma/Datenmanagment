@@ -2,5 +2,92 @@
 \chapter{Anhang}
 \label{chap:anhang}
 
+\section{Datenprofile der Use Cases}
+\label{sec:anhang-datenprofile}
+
+Die folgenden Tabellen dokumentieren die vollständige Einordnung der in
+Kapitel~\ref{chap:fachliche-beschreibung} zusammengefassten Datenquellen
+\citep[Folien~11--12, 17--18]{nordakademieSzenarioVersicherung}.
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.9}
+  \caption{Datenprofil der Betrugserkennung}
+  \label{tab:daten-fraud}
+  \begin{tabularx}{\textwidth}{@{}
+    >{\raggedright\arraybackslash}p{3.3cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}p{2.3cm}
+    >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Datenquelle & Struktur & Aktualität & Speicherung & Analyse \\
+    \midrule
+    Historische Schadensdaten
+      & strukturiert & aktuell & ca. 10 Jahre & kontinuierlich \\
+    Kaufkraft je Postleitzahl
+      & strukturiert & unregelmäßig & mehrjährig & unregelmäßig \\
+    Wetter- und Geodaten
+      & semi-strukturiert & hochaktuell & fallbezogen & pro Schadenfall \\
+    Fahrzeugtelemetrie
+      & strukturiert & kontinuier\-lich & fallbezogen & pro Schadenfall \\
+    Schadenmeldung und -historie
+      & gemischt & hochaktuell & ca. 10 Jahre & kontinuierlich \\
+    Schadensfotos/-dokumente einschließlich EXIF
+      & unstruk\-turiert & hochaktuell & ca. 10 Jahre & kontinuierlich \\
+    Bestätigte Betrugsfälle / externe Fraud-Datenbank
+      & strukturiert & unregelmäßig & über 10 Jahre & Modelltraining \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{0.9}
+  \caption{Datenprofil der Kündigungsprognose}
+  \label{tab:daten-churn}
+  \begin{tabularx}{\textwidth}{@{}
+    >{\raggedright\arraybackslash}p{3.3cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}p{2.0cm}
+    >{\raggedright\arraybackslash}p{2.3cm}
+    >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Datenquelle & Struktur & Aktualität & Speicherung & Analyse \\
+    \midrule
+    Vertragsdaten
+      & strukturiert & aktuell & ca. 10 Jahre & kontinuierlich \\
+    Kündigungen und Neuabschlüsse
+      & strukturiert & aktuell & über 10 Jahre & Modelltraining \\
+    Kundendaten
+      & strukturiert & aktuell & ca. 10 Jahre & kontinuierlich \\
+    CRM-Daten
+      & semi-strukturiert & hochaktuell & ca. 10 Jahre & kontinuierlich \\
+    Leistungs\-abrechnungen
+      & strukturiert & aktuell & ca. 10 Jahre & kontinuierlich \\
+    Zahlungshistorie
+      & strukturiert & aktuell & ca. 10 Jahre & kontinuierlich \\
+    Kaufkraft je Postleitzahl
+      & strukturiert & unregelmäßig & mehrjährig & unregelmäßig \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\medskip
+\noindent
+Das in Kapitel~\ref{chap:fachliche-beschreibung} verwendete
+Anforderungsszenario wird nachfolgend vollständig wiedergegeben
+\citep{nordakademieSzenarioVersicherung}.
+
+\includepdf[
+  pages=-,
+  fitpaper=true,
+  pagecommand={\thispagestyle{empty}}
+]{../quellen/Szenario3_Versicherung_Allianz.pdf}
+
 % Bei Bedarf aktivieren:
 % \input{backmatter/anhang/eigenstaendigkeitserklaerung}
