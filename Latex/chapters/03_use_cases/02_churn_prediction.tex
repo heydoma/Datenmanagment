@@ -4,44 +4,48 @@
 
 \subsection{Zielsetzung und fachlicher Kontext}
 
-Der zweite betrachtete Anwendungsfall unterstützt Vertrieb und Kundenbetreuung
-in der privaten
-Krankenversicherung. Kündigungen sind wirtschaftlich relevant, da die
-Gewinnung neuer Kundinnen und Kunden höhere Aufwände verursachen kann als die
-Bindung bestehender Kundenbeziehungen. Als mögliche Auslöser nennt das
+Der zweite betrachtete Anwendungsfall dreht sich um die Identifzierung 
+kündigungsgefährdeter Krankenversicherungs-Kunden.
+Unterstützt werden damit Vertrieb und Kundenbetreuung
+im Bereich der privaten Krankenversicherung. 
+Der finanzielle Aufwand für die Gewinnung von Neukunden
+ist deutlich höher als der für das Halten von Bestandskunden.
+Als mögliche Auslöser für Kündigungen nennt das
 Anforderungsszenario Beitragsanpassungen, Unzufriedenheit mit Leistungen und
 Konkurrenzangebote
 \citep[Folie~17]{nordakademieSzenarioVersicherung}.
 
-Ein Modell soll die Kündigungswahrscheinlichkeit von Bestandskundinnen und
--kunden bestimmen, wesentliche Einflussfaktoren ausweisen und gefährdete Fälle
-für Rückhaltemaßnahmen priorisieren \citep{spiteri2018}. Über konkrete
-Maßnahmen entscheidet weiterhin die Kundenbetreuung; das Modell dient
+Die Data Science Anforderung, die sich daraus ergibt, 
+besteht darin, die Kündigungswahrscheinlichkeit von Bestandskundinnen und
+-kunden zu bestimmen, wesentliche Einflussfaktoren auszuweisen und gefährdete Fälle
+für Rückhaltemaßnahmen zu priorisieren \citep{spiteri2018}. 
+Umgesetzt werden, soll dies durch ein KI-Modell.
+Über konkrete Maßnahmen entscheidet weiterhin die Kundenbetreuung; das Modell dient
 ausschließlich der Entscheidungsunterstützung
 \citep[Folie~17]{nordakademieSzenarioVersicherung}. Als fachliches Ziel nennt
 das Anforderungsszenario eine Verringerung der Kündigungsquote um 10\,\%
 gegenüber dem Vorjahreszeitraum
-\citep[Folie~17]{nordakademieSzenarioVersicherung}. Dieser Zielwert ist im
-späteren Betrieb zu validieren und stellt kein bereits erzieltes Ergebnis dar.
+\citep[Folie~17]{nordakademieSzenarioVersicherung}. 
 
 \subsection{Architekturrelevante Anforderungen}
 
-Die Prognose nutzt vor allem Vertragsdaten zu Laufzeit, Beitragsentwicklung
-und Tarifwechseln; historische Kündigungen und Neuabschlüsse liefern die
+Die KI-basierte Prognose nutzt vor allem Vertragsdaten zu 
+Laufzeit, Beitragsentwicklung und Tarifwechseln; 
+historische Kündigungen und Neuabschlüsse liefern die
 Trainingsgrundlage. Kunden-, CRM- und Zahlungsdaten bilden bisherige
 Interaktionen, Beschwerden und Zahlungsverhalten ab. Ergänzend werden
 aggregierte Leistungsabrechnungen sowie sozioökonomische Kontextdaten
 einbezogen.
-
 Das vollständige Datenprofil mit Struktur, Aktualität, Speicherdauer und
 Analysebedarf ist in Tabelle~\ref{tab:daten-churn} im Anhang dargestellt
 \citep[Folien~17--18]{nordakademieSzenarioVersicherung}.
 
-Die Quellen sind überwiegend strukturiert und werden kontinuierlich oder
+Die Datenquellen sind überwiegend strukturiert und werden kontinuierlich oder
 hochaktuell aktualisiert. Für Training und Ursachenanalyse müssen historische
 Stände erhalten bleiben; die Kundenbetreuung benötigt aktuelle
-Modellergebnisse. Gesundheitsbezogene Leistungsdaten sind zu minimieren und
-streng zu schützen. Training und Anwendung des Modells müssen innerhalb des
+Modellergebnisse. Gesundheitstechnische und personenbezogene 
+Leistungsdaten sind zu minimieren und streng zu schützen. 
+Training und Anwendung des Modells müssen innerhalb des
 jeweils zulässigen regionalen Datenraums erfolgen
 \citep{euGDPR}.
 
@@ -49,62 +53,4 @@ Aus den fachlichen Zielen und den unterschiedlichen Anforderungen an
 Struktur, Aktualität, Schutz und Historisierung der Daten werden in
 Kapitel~\ref{chap:architektur} die benötigten Architekturkomponenten
 abgeleitet und zu einer ganzheitlichen Zielarchitektur zusammengeführt.
-
-
-Vorschlag von Lorenz
-
-Der zweite Data Science Use Case, 
-der von der Datenarchitektur abgedeckt werden soll, 
-neben den gängigen BI Anforderungen, 
-dreht sich um die Identifzierung kündigungsgefährdeter
-Krankenversicherungs-Kunden.
-Der finanzielle Aufwand für die Gewinnung von Neukunden
-ist deutlich höher als der für das Halten von Bestandskunden.
-Daraus ergibt sich die Zielsetzung potenzielle Kündiger:innen 
-frühzeitig zu identifizieren, sodass diese gesondert betreut werden können,
-um eine mögliche Kündigung zu verhindern.
-In Zahlen erhofft sich die Allianz SE, dass die Kündigungsquote 
-in den privaten Krankenversicherungen um 10\% gesenkt werden kann
-im Vergleich zum Vorjahr.
-Interessensgruppe für diesen Anwendungsfall 
-sind demnach Vertrieb und Kundenbetreuung.
-Ihnen sollen die von einem KI-Modell als kündigungsgefährdet identifzierten 
-und priorisierten Fälle zur Verfügung gestellt werden.
-Dabei ist zu beachten, dass personenbezogene Gesundheitsdaten
-nach DSGVO besonders schützenswert sind.
-Für die Anforderung werden die in 
-Tabelle~\ref{tab:use-case-2-analysedaten} dargestellten Analysedaten verwendet.
-
-\begin{table}[H]
-  \centering
-  \caption{Analysedaten für die Vorhersage kündigungsgefährdeter KV-Kunden}
-  \label{tab:use-case-2-analysedaten}
-  \begin{tabularx}{\textwidth}{@{}p{6.5cm}X@{}}
-    \toprule
-    Datenquelle & Beschreibung \\
-    \midrule
-    \midrule
-    Vertragssystem
-      & Vertragslaufzeiten, Tarifwechsel, Beitragsentwicklungen und -anpassungen \\
-    \midrule
-    historische Kündigungen (und Neuabschlüsse)
-      & Grundlage für das Modelltraining \\
-    \midrule
-    Kundendatenbank
-      & demografische Merkmale (Alter, Familienstand, Vertragsdauer) \\
-    \midrule
-    CRM-System 
-      & Kontakthistorie, Beschwerden, Reaktionen auf Rückhalteangebote \\
-    \midrule
-      Leistungsabrechnungsdaten
-      & Inanspruchnahme von Gesundheitsleistungen \\
-    \midrule
-    Zahlungshistorie
-      & Zahlungsverzüge, Mahnungen \\
-    \midrule
-      Kaufkraft-/sozioökonomische Daten je Postleitzahl
-      & zusätzlicher Kontext für mögliche Mustererkennung \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
 

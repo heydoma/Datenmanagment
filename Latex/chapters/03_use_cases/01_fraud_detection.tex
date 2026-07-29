@@ -1,26 +1,6 @@
 \section{Betrugserkennung bei Kfz-Schadensfällen}
 \label{sec:fraud}
 
-Beim ersten spezifischen Data Science Use Case, 
-der durch die zu entwickelnde Datenarchitektur abgedeckt werden soll,
-handelt es sich um die KI-gestütze Betrugserkennung bei Kfz-Schadensfällen.
-Versicherungsbetrug verursacht nicht nur erhebliche finanzielle Schäden,
-sondern wird durch die rasanten Fortschritte generativer KI 
-gleichzeitig einfacher und schwieriger erkennbar.
-Gefälschte Schadensfotos und andere Nachweise werden zunehmend hochwertiger.
-Und durch die breite Verfügbarkeit performance-starker KI Modelle 
-braucht es außerdem keine besonderen Fertigkeiten mehr, 
-um Fotos und Videos zu manipulieren \citep{hever2025}.
-Um die finanziellen Verluste durch Betrug bei Kfz-Schadensfällen zu minimieren,
-soll für die Allianz SE ein KI-Modell entwickelt werden,
-welches alle für den Schadenfall relevanten Informationen verarbeitet,
-und basierend darauf eine Einschätzung gibt, 
-ob es sich dabei um einen Betrugsversuch handelt.
-Die für diesen Use Case relevanten Analysedaten sind in 
-Tabelle~\ref{tab:use-case-1-analysedaten} fachlich aufbereitet.
-
-
-
 \subsection{Zielsetzung und fachlicher Kontext}
 
 Der erste betrachtete Anwendungsfall, der durch die zu entwickelnde
@@ -39,13 +19,14 @@ Betrugsversuchs einschätzen
 \citep{debener2023,nordakademieSzenarioVersicherung}. Das Ergebnis dient
 ausschließlich der
 Entscheidungsunterstützung. Ob eine Schadensmeldung abgelehnt oder vertieft
-geprüft wird, entscheiden weiterhin die zuständigen Mitarbeitenden im
-Schadenmanagement
+geprüft wird, entscheiden weiterhin die zuständigen Sachbearbeitenden im
+Schadensmanagement
 \citep[Folie~11]{nordakademieSzenarioVersicherung}.
 
 \subsection{Architekturrelevante Anforderungen}
 
-Im Mittelpunkt stehen die aktuelle Schadenmeldung mit Ort, Datum, Uhrzeit und
+Im Mittelpunkt der Datenbasis für diese Anforderung 
+stehen die aktuelle Schadenmeldung mit Ort, Datum, Uhrzeit und
 Vorgangsbeschreibung, die Schadenhistorie sowie zugehörige Fotos und Dokumente
 einschließlich ihrer EXIF-Metadaten. Historische Schaden- und bestätigte
 Betrugsfälle sowie gegebenenfalls externe Fraud-Datenbanken bilden die
@@ -53,7 +34,6 @@ Trainingsgrundlage. Wetter-, Geo- und Kaufkraftdaten sowie optional verfügbare
 Fahrzeugtelemetrie ergänzen diese Bestände, um Ort, Zeitpunkt und Plausibilität
 eines gemeldeten Schadens zu prüfen
 \citep[Folie~11]{nordakademieSzenarioVersicherung}.
-
 Das vollständige Datenprofil mit Struktur, Aktualität, Speicherdauer und
 Analysebedarf ist in Tabelle~\ref{tab:daten-fraud} im Anhang dargestellt
 \citep[Folien~11--12]{nordakademieSzenarioVersicherung}.
@@ -64,5 +44,6 @@ Fallbezogene Daten müssen zeitnah verarbeitet werden, während historische
 Bestände langfristig für Training und Nachvollziehbarkeit verfügbar bleiben.
 Fotos und Dokumente erfordern skalierbaren Objektspeicher; operative
 Schadeninformationen benötigen dagegen einen schnellen, fallbezogenen Zugriff.
-Personenbezogene Dokument- und Telemetriedaten sind besonders zu schützen
+Außerdem ist zu beachten, dass personenbezogene Dokument- und Telemetriedaten 
+nach GDPR der EU als besonders schützenswert eingestuft werden
 \citep{euGDPR}.
