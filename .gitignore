@@ -73,3 +73,6 @@ out/
 
 # Unveränderte Quelldokumente
 !quellen/Szenario3_Versicherung_Allianz.pdf
+
+# SVG conversion output
+svg-inkscape/
