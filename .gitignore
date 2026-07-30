@@ -69,7 +69,7 @@ out/
 .DS_Store
 
 # Erzeugte PDF-Dateien
-*.pdf
+Latex/*.pdf
 
 # Unveränderte Quelldokumente
 !quellen/Szenario3_Versicherung_Allianz.pdf

@@ -3,12 +3,18 @@
 
 Im folgenden Teil wird die, für die Anforderungen der Allianz SE ausgearbeitete,
 Datenarchitektur erläutert.
+Neben den in den Kapiteln \ref{sec:fraud} und \ref{sec:churn} 
+vorgestellten Data Science Use Cases soll die Architektur
+auch gängiges BI Reporting ermöglichen. 
+Letzteres soll sowohl global für den gesamten Konzern 
+als auch für die einzelnen Regionen, 
+in denen die Allianz aktiv ist, umgesetzt werden.
+
 Eine zentrale Herausforderung stellt dabei die breite Nutzung von
 personenbezogenen und teilweise gesundheitstechnischen Daten dar.
 Diese gelten als besonders schützenswert und sind innerhalb der zulässigen
 regionalen Datenräume zu verarbeiten.
-Vor allem auch für die in den Kapiteln \ref{sec:fraud} und \ref{sec:churn} 
-vorgestellten Use Cases sind solche Daten essenziell.
+Vor allem auch für die Data Science Use Cases sind solche Daten essenziell.
 Daher wird die vorgeschlagene Datenarchitektur nachfolgend
 in zwei Abschnitten präsentiert: 
 erstens eine regionale Datenarchitektur, die vor allem darauf fokussiert ist,
@@ -16,31 +22,6 @@ die beiden Use Cases abzudecken.
 Und zweitens eine übergeordnete, globale Datenarchitektur,
 welche sich auf übliche BI Fragestellungen konzentriert, 
 die auf Konzern-Ebene beantwortet werden.
-
-% WIP
-% folgende Absätze gehören evtl. eher in die eigenen Kapitel
-
-Erstere müsste mehrfach in gleicher Form aufgebaut werden.
-Je einmal pro Region,
-für die die Anwendungsfälle gesammelt betrachtet werden.
-Wobei die Regionen sich nicht über die Grenzen 
-eines Datenraums hinaus erstrecken.
-Wie genau diese Regionen dann geschnitten werden,
-ist eine Entscheidung der Allianz SE.
-Denkbar wären verschiedene Skalierungen, 
-wie z.B. Deutschland, DACH Raum oder EU-weit.  
-
-Letztere hingegen setzt auf die regionalen Datenarchitekturen auf,
-erweitert diese und führt sie Regions-übergreifend zusammen.
-Die beiden komplexeren Data Science Anwendungsfälle 
-sind hier nicht mehr Teil des Betrachtungsgegenstands.
-Stattdessen sind die Anforderungen, die in diesem Abschnitt abgedeckt werden,
-übliche BI Fragestellungen.
-Einerseits regionale Anforderungen, die aus dem ersten Abschnitt 
-rausgelassen werden, um den Fokus nicht von den speziellen Use Cases zu verschieben.
-Und andererseits strukturierte Datenanalysen,
-die für den gesamten Konzern beantwortet werden sollen.
-
 
 \input{chapters/04_architekturdesign/01_regionale_architektur.tex}
 \input{chapters/04_architekturdesign/02_globale_architektur.tex}

@@ -8,12 +8,6 @@ Im Ordner `Latex`:
 latexmk -pdf main.tex
 ```
 
-oder falls SVGs zum ersten mal eingefügt werden:
-
-```sh
-latexmk -pdf -shell-escape main.tex
-```
-
 Alternativ:
 
 ```sh
