@@ -1,5 +1,111 @@
-\section{Datenmodellierung}
+\section{Dimensionales Datenmodell für die Betrugserkennung}
 \label{sec:sternschema}
 
-Exemplarisch wird ein dimensionales Datenmodell für die Kündigungsprognose
-vorgestellt.
+Für die Betrugserkennung werden die in
+Abbildung~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder,
+Gutachten, EXIF- und Wetterdaten sowie externe Kaufkraftdaten werden zunächst
+im Data Lake gespeichert. Der folgende Entwurf konzentriert sich auf die
+strukturierte Datenhaltung im regionalen Data Warehouse. Das dort eingesetzte
+Galaxy Schema enthält deshalb nicht die Rohdateien selbst, sondern nur die für
+wiederkehrende Betrugsanalysen benötigten Daten und daraus abgeleiteten
+Merkmale.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.62\textwidth,keepaspectratio]
+    {images/Quelldaten.pdf}
+  \caption{Quellen für die Betrugserkennung bei Kfz-Schadensfällen
+    (eigene Darstellung)}
+  \label{fig:quelldaten-fraud}
+\end{figure}
+
+Die Quellsysteme sind für die Bearbeitung einzelner Geschäftsvorfälle
+ausgelegt. Für die Betrugserkennung müssen Schäden dagegen über Kunden,
+Fahrzeuge, Zeiträume, Orte und Betrugsmuster hinweg verglichen werden. Deshalb
+wird ein dimensionales Modell gewählt, in dem Bewegungsdaten als Fakten und
+die beschreibenden Analyseperspektiven als Dimensionen modelliert werden. In
+einem Sternschema sind die Dimensionen sternförmig um eine Faktentabelle
+angeordnet; ihre Primärschlüssel werden als Fremdschlüssel in der
+Faktentabelle geführt \citep[S.~37--38]{gerlachSchulz2026}. Die Struktur ist
+für den Anwendungsfall geeignet, weil sie leicht verständlich ist und gute
+Abfrageeigenschaften bietet \citep[S.~38]{gerlachSchulz2026}.
+
+Ein einzelnes Sternschema reicht jedoch nicht aus. Schadensfälle und
+Telemetrieereignisse werden unterschiedlich detailliert erfasst: Zu einem Schaden
+gehören genau eine gemeldete und eine ausgezahlte Summe, während während einer
+Fahrt viele Sensorereignisse mit eigenem Zeitpunkt, Standort und Messwerten
+entstehen. Würden beide Ereignisarten in einer Faktentabelle gespeichert,
+müsste der Schaden für jedes Telemetrieereignis wiederholt werden. Dadurch
+könnten Schadenssummen und Fallzahlen mehrfach gezählt werden. Eine vorherige
+Aggregation der Telemetrie würde dagegen möglicherweise relevante einzelne
+Auffälligkeiten verbergen.
+
+Aus diesem Grund werden zwei Sternschemata mit jeweils eigener Faktentabelle
+gebildet. Sie teilen sich \texttt{Dim\_Kunde\_Fahrzeug} und
+\texttt{Dim\_Zeit}, weil Fahrzeugbezug und Zeitpunkt für beide Faktentabellen
+dieselbe fachliche Bedeutung besitzen. Gemeinsam verwendete Dimensionen werden
+als \emph{Conformed Dimensions} bezeichnet. Werden mehrere Sternschemata über
+solche Dimensionen verbunden, entsteht ein \emph{Galaxy Schema}
+beziehungsweise Galaxieschema \citep[S.~47]{gerlachSchulz2026}. Das für die
+Betrugserkennung entworfene Modell ist in Abbildung~\ref{fig:galaxy-fraud}
+dargestellt.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.40\textwidth,keepaspectratio]
+    {images/Datenmodell.pdf}
+  \caption{Galaxy Schema für die Betrugserkennung bei Kfz-Schadensfällen
+    (eigene Darstellung)}
+  \label{fig:galaxy-fraud}
+\end{figure}
+
+In \texttt{Fakt\_Schadensfall} entspricht jeder Datensatz genau einem
+Schadensfall. Neben gemeldeter und ausgezahlter Summe enthält die Tabelle die
+für die Risikobewertung erzeugten Merkmale, beispielsweise den
+Photo-Forgery-Score, die Abweichung zwischen Bild- und Schadenort sowie den
+gesamten Fraud-Score. Die manuell bestätigte Betrugsentscheidung wird ebenfalls
+am Schadensfall gespeichert, weil sie die Zielvariable für das spätere
+überwachte Lernen bildet. Sie wird bei der Modellbildung von den
+Eingabemerkmalen getrennt.
+
+In \texttt{Fakt\_Telemetrie\_Event} entspricht ein Datensatz einem einzelnen
+Sensorereignis. Diese Detailtiefe bleibt erhalten, weil beispielsweise eine
+starke Beschleunigung, Bremsung oder Airbagauslösung für die Plausibilisierung
+eines Schadens relevant sein kann. Die beiden Faktentabellen werden nicht
+direkt miteinander verbunden, sondern über ihre gemeinsamen Dimensionen
+ausgewertet. Dadurch bleiben die Telemetriedaten detailliert, ohne
+Schadensfälle zu vervielfachen.
+
+\texttt{Dim\_Kunde\_Fahrzeug} kombiniert Kunden- und Fahrzeugkontext, weil
+beide Ereignisarten einem konkreten Fahrzeug eines Kunden zugeordnet werden
+müssen. Die Kunden-ID stellt den Bezug zum Versicherungsnehmer her, während
+die Fahrgestellnummer das Fahrzeug eindeutig identifiziert. Die gemeinsame
+Dimension ermöglicht außerdem, Änderungen der Kunden-Fahrzeug-Zuordnung durch
+Gültig-von, Gültig-bis und die Kennzeichnung des aktuellen Datensatzes zu
+historisieren. Marke, Modell und Baujahr unterstützen sowohl die Bewertung
+eines Schadens als auch die Einordnung von Telemetriemesswerten. Kaufkraftindex
+und sozioökonomische Klasse werden über die Postleitzahl als verdichteter
+regionaler Kundenkontext ergänzt.
+
+\texttt{Dim\_Zeit} wird ebenfalls von beiden Fakten genutzt und ermöglicht
+einheitliche Auswertungen nach Jahr, Quartal, Monat, Saison und Wochenende. Sie
+wird als vollständige Kalenderdimension intern erzeugt und kann auch Zeiträume
+enthalten, für die noch keine Bewegungsdaten vorliegen
+\citep[S.~40]{gerlachSchulz2026}.
+
+Die beiden übrigen Dimensionen werden nur für Schadensfälle benötigt.
+\texttt{Dim\_Wetter} enthält die anhand von Unfallort und Unfallzeitpunkt
+zugeordneten Angaben zu Niederschlag, Windstärke und Extremwetter. Damit lässt
+sich prüfen, ob die gemeldeten Rahmenbedingungen eines Schadens plausibel
+sind. \texttt{Dim\_Betrugsmuster} bündelt die in den historischen
+Schadensdaten dokumentierten Angaben zu Betrugskategorie, Vorgehensweise und
+Risikoklasse. Die Auslagerung verhindert wiederholte Beschreibungen in der
+Faktentabelle und ermöglicht einheitliche Auswertungen nach bestätigten
+Betrugsmustern.
+
+Technisch erzeugte Primärschlüssel entkoppeln das Warehouse von den
+unterschiedlichen Schlüsseln der Quellsysteme und ermöglichen die
+Historisierung der Dimensionen. Die ursprüngliche Schadensnummer und die
+Sensorereignis-ID bleiben zusätzlich in den Fakten gespeichert, damit
+Dubletten erkannt und Analyseergebnisse bis zu ihrer Quelle zurückverfolgt
+werden können.

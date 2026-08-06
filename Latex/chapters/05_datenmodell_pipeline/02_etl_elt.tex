@@ -1,6 +1,157 @@
 \section{Aufbereitung und Bereitstellung}
 \label{sec:pipeline}
 
-\subsection{ETL-/ELT-Pipeline-Design}
+Die im vorangegangenen Kapitel beschriebene Architektur legt fest, in welchen
+Komponenten die Daten gespeichert und verarbeitet werden. Dieses Kapitel
+konkretisiert die dafür erforderlichen Datenflüsse anhand von drei
+ETL-Pipelines. Die erste Pipeline bereitet strukturierte Quelldaten auf und
+lädt sie direkt in das Data Warehouse. Unstrukturierte und umfangreiche
+Rohdaten werden dagegen zunächst vollständig im Data Lake gespeichert. Dadurch
+bleibt die ursprüngliche Informationsbasis für spätere Auswertungen erhalten
+und die Trennung zwischen Rohdaten und bereits aufbereiteten Daten bleibt
+nachvollziehbar. Die zweite Pipeline gewinnt aus diesen Rohdaten die für das
+Data Warehouse benötigten Merkmale. Die dritte Pipeline führt schließlich die
+qualitätsgesicherten Daten aus dem Data Warehouse in der Data-Science-Sandbox
+zu einem Datensatz zusammen, mit dem das Betrugserkennungsmodell trainiert und
+bewertet werden kann.
 
-\subsection{Zuordnung der Verarbeitungsschritte zu den Architekturkomponenten}
+In allen drei Pipelines werden die Daten aus den Quellen extrahiert, vor dem
+Laden aufbereitet und an das jeweilige Zielschema angepasst
+\citep[S.~18--23]{schulz2024}. Diese Reihenfolge wurde gewählt, weil das Galaxy
+Schema und die für die Betrugserkennung benötigten Merkmale bereits feststehen.
+
+\medskip
+\noindent\textbf{Pipeline 1: Strukturierte Quellen zum Data Warehouse.}
+
+Die erste Pipeline in Abbildung~\ref{fig:pipeline-strukturiert-dwh} integriert
+Kunden- und Vertragsdaten, Schadensdaten, historische Schadens- und
+Prüfergebnisse sowie Fahrzeugtelemetrie. Jeder Quellenzweig wird zunächst
+separat extrahiert, bereinigt und von Dubletten befreit. Nicht benötigte
+direkte Identifikatoren wie Name, Anschrift und Geburtsdatum werden bereits
+vor dem Laden entfernt. Kunden-ID und Fahrgestellnummer bleiben im geschützten
+regionalen Datenraum erhalten, weil sie für die fachlich korrekte Zuordnung
+von Schäden und Fahrzeugereignissen erforderlich sind.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]
+    {images/Pipeline_1_Strukturierte_Quellen_DWH.pdf}
+  \caption{Pipeline 1: Strukturierte Quellen zum regionalen Data Warehouse
+    (eigene Darstellung in Anlehnung an \citealp[S.~18--23]{schulz2024})}
+  \label{fig:pipeline-strukturiert-dwh}
+\end{figure}
+
+Die Kunden-Fahrzeug-Dimension wird vor den Faktentabellen geladen, damit ihre
+Schlüssel bei der anschließenden Integration nachgeschlagen werden können.
+Schadensdaten bilden die führende Datenmenge für
+\texttt{Fakt\_Schadensfall}. Die historisierte Kunden-Fahrzeug-Zuordnung wird
+über Kunden-ID, Fahrgestellnummer und den zum Unfallzeitpunkt gültigen Zeitraum
+ermittelt. Historische Prüfergebnisse werden über die Schadens-ID ergänzt. Für
+diese Verbindungen wurden Left Joins gewählt. Dadurch bleiben alle neuen
+Schadens- beziehungsweise Telemetriedatensätze erhalten und werden um die
+jeweils verfügbaren Informationen ergänzt \citep[S.~68]{gerlachSchulz2026}.
+
+Die Alternativen erfüllen dieses Ziel nicht so gut. Ein Inner Join würde nur
+Datensätze mit einem Treffer auf beiden Seiten übernehmen. Schäden ohne bereits
+vorliegende Betrugsprüfung oder vorübergehend fehlende Stammdaten würden damit
+unbemerkt verloren gehen. Das würde den Datenbestand verkleinern und könnte
+auch die spätere Modellbildung verzerren. Ein Right Join würde dagegen alle
+Datensätze der ergänzenden rechten Tabelle erhalten, beispielsweise auch
+Dimensions- oder Prüfeinträge ohne zugehörigen neuen Schadensfall. Diese werden
+für das Laden der Faktentabellen nicht benötigt. Ein Right Join ließe sich zwar
+durch Vertauschen der Tabellen als Left Join ausdrücken, die gewählte
+Darstellung macht jedoch eindeutig, dass die neuen Ereignisdaten die führende
+Datenmenge bilden.
+
+Am Ende der Pipeline werden die aufbereiteten Datensätze noch einmal mit den
+bereits geladenen Dimensionen des Data Warehouse verbunden. In Schritt 19
+liefert \texttt{Dim\_Zeit} den Datumsschlüssel zum Unfallzeitpunkt;
+\texttt{Dim\_Betrugsmuster} liefert den Schlüssel zur Kombination aus
+Kategorie, Vorgehensweise und Risikoklasse. In Schritt 20 wird für jedes
+Telemetrieereignis aus \texttt{Dim\_Kunde\_Fahrzeug} der zur Fahrgestellnummer
+und Ereigniszeit gültige Kunden-Fahrzeug-Schlüssel ermittelt. Aus
+\texttt{Dim\_Zeit} kommt zusätzlich der Datumsschlüssel. Diese Verbindungen
+sind notwendig, damit in den neuen Fakten die einheitlichen Schlüssel des Data
+Warehouse anstelle unterschiedlicher Quellschlüssel gespeichert werden und
+beide Faktentabellen dieselben Dimensionswerte verwenden.
+
+Fachlich gültige, aber noch nicht zuordenbare Datensätze werden auch bei diesen
+Verbindungen nicht verworfen. Sie erhalten einen definierten
+Unbekannt-Schlüssel und werden zur späteren Klärung protokolliert. Die vorherige
+Bereinigung reduziert solche Fälle, kann etwa bei verspätet gelieferten
+Stammdaten aber nicht alle fehlenden Zuordnungen verhindern.
+
+\medskip
+\noindent\textbf{Pipeline 2: Data Lake zum Data Warehouse.}
+
+Die zweite Pipeline in Abbildung~\ref{fig:pipeline-lake-dwh} trennt die
+aufwendige Verarbeitung von Fotos und Rohdaten von der Integration der
+strukturierten Quellsysteme. Ihr Ziel ist es, die im Data Lake gespeicherten
+semi-strukturierten und unstrukturierten Rohdaten in strukturierte Merkmale für
+das Galaxy Schema zu überführen. Schadensfotos und Gutachten verbleiben dabei
+als Originale im Data Lake. Aus Bildinhalt und Metadaten werden nur die für den
+Anwendungsfall benötigten Merkmale extrahiert. Dazu gehören insbesondere ein
+Hinweis auf mögliche Bildmanipulation sowie der Vergleich von Aufnahme- und
+Unfallort. Wetter- und Kaufkraftwerte werden vereinheitlicht und über
+Zeitpunkt beziehungsweise Postleitzahl zugeordnet.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]
+    {images/Pipeline_2_Data_Lake_DWH.pdf}
+  \caption{Pipeline 2: Data Lake zum regionalen Data Warehouse
+    (eigene Darstellung in Anlehnung an \citealp[S.~18--23]{schulz2024})}
+  \label{fig:pipeline-lake-dwh}
+\end{figure}
+
+In das Data Warehouse werden nicht die unstrukturierten Dateien dupliziert,
+sondern die reproduzierbaren strukturierten Ergebnisse geladen. Der
+Photo-Forgery-Score und die Ortsabweichung ergänzen den Schadensfakt,
+Wettermerkmale werden in \texttt{Dim\_Wetter} und regionale Kaufkraftmerkmale
+in \texttt{Dim\_Kunde\_Fahrzeug} bereitgestellt. Diese Trennung bewahrt die
+Flexibilität des Data Lake für spätere Analysen und liefert gleichzeitig ein
+stabiles, abfrageoptimiertes Schema für wiederkehrende Fraud-Auswertungen.
+
+\medskip
+\noindent\textbf{Pipeline 3: Data Warehouse zur Data-Science-Sandbox.}
+
+Die dritte Pipeline in Abbildung~\ref{fig:pipeline-dwh-sandbox} stellt einen
+modellierbaren Datensatz aus den qualitätsgesicherten und historisierten
+DWH-Daten her. Die Pseudonymisierung erfolgt erst an dieser Grenze. Innerhalb
+des geschützten regionalen Data Warehouse bleibt die Zuordnung zum realen
+Schadensfall erhalten, damit Prüfergebnisse zurückgespielt und neue
+Betrugsbestätigungen korrekt gespeichert werden können. In die Sandbox werden
+dagegen keine Namen oder Anschriften übernommen; erforderliche Identifikatoren
+werden projektbezogen pseudonymisiert und die Zuordnungstabelle verbleibt
+außerhalb der Sandbox.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth,keepaspectratio]
+    {images/Pipeline_3_DWH_Sandbox.pdf}
+  \caption{Pipeline 3: Regionales Data Warehouse zur Data-Science-Sandbox
+    (eigene Darstellung)}
+  \label{fig:pipeline-dwh-sandbox}
+\end{figure}
+
+Nach Bereinigung und Merkmalskonstruktion wird die manuell bestätigte
+Betrugsentscheidung als Zielvariable von den Eingabemerkmalen getrennt. Sie
+bleibt für Training und Bewertung erhalten, wird dem Modell jedoch nicht als
+Eingabemerkmal übergeben. Anschließend erfolgt die Aufteilung in Trainings-,
+Validierungs- und Testdaten. Trainingsdaten dienen der Modellanpassung,
+Validierungsdaten der Auswahl und Optimierung, während Testdaten erst danach
+eine realistische Bewertung mit unbekannten Fällen ermöglichen
+\citep[S.~20--21]{gerlachSchulz2026}.
+
+Bestätigte Betrugsfälle bilden voraussichtlich die Minderheitsklasse. Ein
+Modell könnte deshalb trotz hoher Accuracy fast ausschließlich
+Nicht-Betrugsfälle vorhersagen. Oversampling erweitert die Minderheitsklasse,
+während Undersampling zufällig Beispiele der Mehrheitsklasse entfernt. Beide
+Verfahren besitzen gegenläufige Nachteile: Oversampling kann einzelne Muster
+überbetonen, Undersampling verwirft Informationen
+\citep[S.~22--24]{gerlachSchulz2026}. Daher wird eine konfigurierbare
+Kombination gewählt, deren Verhältnis anhand der Validierungsergebnisse
+bestimmt wird. Sampling findet ausschließlich nach der Datenaufteilung und nur
+auf den Trainingsdaten statt. Validierungs- und Testdaten behalten die reale
+Klassenverteilung; dadurch werden Data Leakage und eine künstlich optimistische
+Bewertung vermieden.
