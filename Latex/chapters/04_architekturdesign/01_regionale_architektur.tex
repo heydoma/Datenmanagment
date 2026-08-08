@@ -14,21 +14,8 @@ Wie genau die Regionen dann geschnitten werden,
 ist eine Entscheidung der Allianz SE.
 Denkbar wären verschiedene Skalierungen, 
 wie z.B. Deutschland, DACH Raum oder EU-weit. 
-
 Diese regional aufzubauende Datenarchitektur ist in 
 Abb. \ref{fig:datenarchitektur-regional} dargestellt.
-Im Kern der Architektur befinden sich ein Data Lake
-und ein Data Warehouse.
-Hier werden die Daten aus den relevanten Datenquellen persistiert.
-Bei der Allianz SE gibt es viele strukturierte Datenquellen,
-darunter Kundendaten, Vertragsdaten, historische Schadensdaten und Betrugsfälle, 
-Leistungsabrechnungen, Fahrzeugtelemetriedaten, etc.
-Dazu kommen sozioökonomische Daten je Postleitzahl, 
-welche aus externen Erhebungen entnommen werden.
-Diese strukturierten Daten werden in automatisierter
-Batchverarbeitung jede Nacht 
-(in Abb. \ref{fig:datenarchitektur-regional} dargestellt als ''aktuell'')
-in das Data Warehouse übertragen.
 
 \begin{figure}[tbh]
     \centering 
@@ -36,4 +23,71 @@ in das Data Warehouse übertragen.
     \includegraphics[width=\textwidth]{images/Diagram_regionale_Datenarchitektur.pdf}
     \caption{Detaillierte regionale Datenarchitektur}\label{fig:datenarchitektur-regional}
 \end{figure}
+
+\medskip
+\noindent\textbf{Data Warehouse und Data Lake}
+
+Im Kern der Architektur befinden sich ein Data Lake
+und ein Data Warehouse.
+Hier werden die Daten aus den relevanten Datenquellen persistiert.
+Es wird bewusst die Trennung der beiden Architekturkomponenten gewählt,
+anstelle eines Data Lakehouse,
+aufgrund des Ungleichgewichts zwischen den strukturierten 
+und semi-/unstrukturierten Datenquellen.
+
+Bei der Allianz SE gibt es eine Vielzahl strukturierter Datenquellen,
+darunter Kundendaten, Vertragsdaten, historische Schadensdaten und Betrugsfälle, 
+Leistungsabrechnungen, Fahrzeugtelemetriedaten, etc.
+Dazu kommen sozioökonomische Daten je Postleitzahl, 
+welche aus externen Erhebungen entnommen werden.
+Im Vergleich dazu gibt es nur wenige semi- und
+unstrukturierte Datenquellen, wie z.B. Fotos, 
+die den Schadensmeldungen beigefügt werden.
+Dementsprechend steht die Funktion eines Data Warehouse
+für die Allianz deutlich stärker im Fokus, als die des Data Lake.
+Vor allem da die Daten des Data Warehouse neben den Data Science Anwendungsfällen
+auch für diverse BI Anforderungen genutzt werden (siehe Kap \ref{sec:globale-architektur}).
+Um die Funktion eines Data Warehouse optimal zu erfüllen,
+sollte es durch eine eigenständige Architekturkomponente
+abgebildet werden.
+Eine Vermischung mit dem Data Lake würde die Komplexität 
+dieses Teils der Architektur erhöhen und könnte ggf. 
+die reine Data Warehouse Funktion beeinträchtigen.
+Der Data Lake hingegen wird im Vergleich zum Data Warehouse
+weniger Datenquellen und kleinere Datenmengen verarbeiten.
+Durch eine saubere Trennung der Architekturkomponenten
+kann jeweils eine passende Technologie für die unterschiedlichen
+Anforderungen gewählt werden.
+
+Außerdem werden in einem Data Lakehouse vorerst alle Daten,
+unabhängig von ihrer Struktur,
+in Rohform abgelegt werden, um sie dann für Analysen
+oder erneute Persistierung aufzubereiten.
+Dadurch kann mit sich häufig ändernden Datenquellen umgegangen werden
+und die Daten können vielfältiger genutzt werden.
+Jedoch sind die strukturierten Daten in diesem Szenario 
+in ihrer Form und in den Beziehungen 
+zwischen den Datenquellen beständig.
+Das Versicherungsgeschäft ist auf langfristige Verträge ausgelegt,
+daher ändern sich diese Datenquellen nur selten.
+Für die zwei Data Science Use Cases werden zwar
+verschiedene Ausschnitte des Galaxy-Schemas benötigt,
+in dem die Daten im Data Warehouse abgelegt werden.
+Allerdings ist es nicht notwendig die Daten je Analyseanforderung 
+in völlig unterschiedliche Schemata zu überführen. 
+Die höhere Agilität eines Data Lakehouse
+ist bei den Datenquellen der Allianz 
+und ihren Anforerungen demnach kein nutzbarer Vorteil.
+Stattdessen würden Daten unnötig doppelt persistiert werden
+und für jede Analyseanforderung erneut aufbereitet werden müssen.
+ 
+
+
+% WIP
+Diese strukturierten Daten werden in automatisierter
+Batchverarbeitung jede Nacht 
+(in Abb. \ref{fig:datenarchitektur-regional} dargestellt als ''aktuell'')
+in das Data Warehouse übertragen.
+
+
 
