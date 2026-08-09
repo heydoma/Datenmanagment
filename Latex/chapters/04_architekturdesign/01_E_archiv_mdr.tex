@@ -1,0 +1,27 @@
+\subsection{Archiv und Meta Data Repository}
+
+Abgesehen von den bisher vorgestellten Architekturkomponenten
+beinhaltet die vorgeschlagene regionale Datenarchitektur
+noch zwei ergänzende Architekturkomponenten.
+Erstens ein Meta Data Repository (MDR),
+welches Metadaten über die im Data Warehouse und Data Lake
+gespeicherten Daten und ihre Aufbereitung enthält.
+Die Metadaten dienen dazu die für das Training der KI-Modelle
+verwendeten Daten für die Analyseexperten und -expertinnen nutzbar zu machen.
+Für die Region gibt es ein zentrales MDR, um die Komplexität
+der Datenarchitektur möglichst gering zu halten.
+
+Und zweitens gibt es noch ein Archiv in dem in regelmäßigen
+Abständen Daten aus dem Data Warehouse archiviert werden.
+Viele der Datenquellen enthalten Daten, 
+welche 10 Jahre oder länger gespeichert werden müssen 
+(siehe Anhang~\ref{sec:anhang-datenprofile}).
+Für die aktive Verwendung über die Analysekomponenten,
+sind die Daten allerdings nicht so lange interessant,
+sondern sie können nach 5 Jahren archiviert werden.
+Im Archiv werden Datenträger verwendet, 
+die einen weniger schnellen und flexiblen Zugriff auf die Daten
+ermöglichen, als bspw. ein Data Warehouse. 
+Dafür sind sie aber auch kostengünstiger.
+So können die Speicherkosten für die Datenarchitektur
+gesenkt werden.
