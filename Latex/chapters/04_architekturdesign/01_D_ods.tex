@@ -1,3 +1,60 @@
-\subsection{Operational Data Store und Einsatz vom KI-Modell zur KFZ Betrugserkennung}
+\subsection{Operational Data Store und Einsatz des KI-Modells zur KFZ Betrugserkennung}
 
+Wie beschrieben gibt es auch beim Einsatz des KI-Modells zur
+KFZ Betrugserkennung gerichtete Kanten vom Modell-Training 
+zu dieser Datenanalyse und von ihr zum Data Warehouse.
+Auch hier kommen indirekt die Trainingsdaten zum Einsatz
+und die Ergebnisse des Modells werden für zukünftige Analysen persistiert.
+Speziell für diesen Anwendungsfall ist,
+dass die aktuellen Daten eines Schadensfalls 
+für die Analyse, also die Klassifizierung als Betrug oder nicht-Betrug,
+in einen Operational Data Store geladen werden.
+Für die Historisierung werden sie zusätzlich im Data Warehouse/Data Lake
+gespeichert, das ist für diese Analysefragestellung jedoch weniger interessant.
 
+Ein ODS wird hier eingesetzt, weil die Daten schnell für den Zugriff bereit sein sollen.
+An den gerichteten Kanten, die zum ODS führen ist notiert, 
+dass die Daten hochaktuell und in Batchverarbeitung bereitgestellt werden.
+Das ist an dieser Stelle so zu verstehen, 
+dass die Daten zu einem Schadensfall gesammelt in den ODS geladen werden,
+sobald alle Daten zu diesem Schadensfall in den Datenquellen vorliegen.
+Ab diesem Zeitpunkt können die Sachbearbeitenden 
+damit beginnen den Fall zu bearbeiten. 
+Dabei ist es durchaus denkbar, dass ein Schadensfall
+noch am Tag, an dem er gemeldet wird, auch bearbeitet wird.
+Deshalb wird die höhere Aktualität des ODS benötigt, 
+im Vergleich zu den anderen Komponenten dieser Architektur,
+die die Daten höchstens tagesaktuell vorhalten.
+
+Gleichzeitig ist der Arbeitsablauf jedoch so ausgelegt,
+dass die Sachbearbeitenden die Einschätzung des KI-Modells 
+aktiv anfragen, wenn sie einen Schadensfall bearbeiten. 
+Es wird also nach dem Pull-Prinzip gearbeitet.
+Bei der hohen Aktualität der Daten,
+wäre hier auch die Architekturkomponente Real-Time-Processing
+denkbar gewesen. 
+Allerdings arbeitet das Real-Time-Processing nach dem Push-Prinzip,
+und für diesen Anwendungsfall ist es nicht notwendig,
+dass die Anwendenden aktiv und automatisiert über die Ergebnisse 
+des KI-Modells informiert werden. 
+
+Die Architektur sieht außerdem vor,
+dass die Daten über den aktuellen Schadensfall
+aus dem ODS gelöscht werden, sobald die Betrugseinschätzung
+abgerufen wurde.
+So sind zu jedem Zeitpunkt nur die aktuell relevanten Daten
+im ODS persistiert und der Speicherbedarf bleibt gering.
+Da die Daten zusätzlich in Data Warehouse und Data Lake
+historisiert werden, gehen sie dadurch nicht verloren.
+
+Abschließend wird in dem Szenario der Allianz angenommen,
+dass die KFZ Schadenfälle weder für die gesamte Region
+zentral noch in jeder Filiale einzeln bearbeitet werden.
+Stattdessen gibt es mehrere Schadenszentren pro Region,
+die jeweils für einen Teil der Region 
+oder für unterschiedliche Schadensarten (Haftpficht, Kasko, etc.) zuständig sind.
+Teilweise werden Fälle auch nach Auslastung der Schadenszentren verteilt. 
+Jedes der Schadenszentren erhält einen eigenen ODS, sodass 
+personenbezogene Daten nur für die Sachbearbeitenden einsehbar sind, 
+die für den Fall zuständig sind.
+Daher sind in Abb.~\ref{fig:datenarchitektur-regional} mehrere ODS dargestellt.
