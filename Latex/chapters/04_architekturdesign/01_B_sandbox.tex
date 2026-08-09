@@ -66,6 +66,10 @@ Deshalb ist in Abb. \ref{fig:datenarchitektur-regional} an allen gerichteten Kan
 die in die Sandbox führen,
 alternativ die aktuelle Datenbereitstellung in Batchverarbeitung vermerkt.
 Diese soll das Retraining in regelmäßigen Abständen repräsentieren. 
-
-% TODO: Diagram 2 Sandboxen gefächert?
-% Trainingsdaten aus Sandbox archivieren? (Archiv/Data Lake)
+Zusätzlich führt die gerichtete Kante von der Sandbox
+zurück in den Data Lake.
+Dadurch wird gekennzeichnet, dass die Trainingsdaten des KI-Modells
+im Data Lake persistiert werden, bevor der Datenbestand der Sandbox gelöscht wird.
+Das Vorhalten der Trainingsdaten kann z.B. wichtig sein für
+die Anwendung von post-hoc Explainability Methoden, 
+bei denen häufig Zugriff auf die Trainingsdaten benötigt wird~\cite{pintelas2020}.
