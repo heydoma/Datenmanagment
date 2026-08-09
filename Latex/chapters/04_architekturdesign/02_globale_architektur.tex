@@ -1,7 +1,8 @@
 \section{Übergreifende Datenarchitektur}
 \label{sec:globale-architektur}
 
-Letztere hingegen setzt auf die regionalen Datenarchitekturen auf,
+Der zweite Teil der Datenarchitektur ist in Abb.~\ref{fig:datenarchitektur-global} dargestellt 
+und setzt auf die regionalen Datenarchitekturen auf,
 erweitert diese und führt sie Regions-übergreifend zusammen.
 Die beiden komplexeren Data Science Anwendungsfälle 
 sind hier nicht mehr Teil des Betrachtungsgegenstands.
@@ -18,3 +19,36 @@ die für den gesamten Konzern beantwortet werden sollen.
     \includegraphics[width=0.5\textwidth]{images/Diagram_globale_Datenarchitektur.pdf}
     \caption{globale Datenarchitektur für BI Anwendungsfälle}\label{fig:datenarchitektur-global}
 \end{figure}
+
+Die Basis der übergreifenden Datenarchitektur, bilden die regionalen
+Data Warehouses (in Abb.~\ref{fig:datenarchitektur-global} als ''DWH'' abgekürzt). 
+Sie sind gleichzeitig auch die Schnittstelle zur regionalen Datenarchitektur
+aus Kap.~\ref{sec:regionale-architektur}.
+Auf globaler Konzernebene betrachtet gibt es davon dann mehrere.
+Um innerhalb der einzelnen Regionen zusätzlich zu 
+den zwei Data Science Use Cases auch übliche BI Anforderungen
+abzudecken, soll es abhängige Data Marts geben.
+Sie enthalten jeweils die Daten für einzelne strukturierte
+Analysefragestellungen.
+Dadurch wird haupsächlich erwirkt, dass gezielt
+die Mitarbeitenden Zugriff auf die Daten erhalten, 
+die sie für ihre Arbeit brauchen.
+Einerseits ist das für den Schutz personenbezogener
+und besonders schützenswerter Daten wichtig.
+Und andererseits können so Sachbearbeitende nur Daten
+einsehen, für deren Analyse ihr Domänenwissen und ihre Datenkompetenz ausreicht.
+
+Auf Konzernebene werden außerdem die Daten 
+der regionalen Data Warehouses in einem globalen Data Warehouse
+zusammengeführt.
+Das erlaubt Regions-übergreifende strukturierte Analysen.
+Typische wiederkehrende Reports auf Konzernebene sind z.B.
+Umsätze und Gewinne des letzten Quartals.
+Diese Analysen können entweder direkt auf dem globalen Data Warehouse
+durchgeführt werden, oder aber auf davon abhängigen Data Marts,
+je nach Befugnis und Datenkompetenz der Analysierenden.
+Dabei ist nach Anforderung der Allianz zu beachten,
+dass personenbezogene Kundendaten nur innerhalb 
+der jeweiligen Region verarbeitet werden dürfen~\citep[Folie~17]{nordakademieSzenarioVersicherung}.
+Daten, die in das globale Data Warehouse überführt werden, 
+müssen dementsprechend zwingend anonymisiert werden.
