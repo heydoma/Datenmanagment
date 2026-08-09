@@ -1,0 +1,68 @@
+\subsection{Data Marts und Einsatz vom KI-Modell zur KV-Kündiger Prognose}
+
+Neben dem Training der KI-Modelle gibt es, wie zuvor beschrieben,
+je Anwendungsfall auch eine Analysefragestellung, 
+die den Einsatz des jeweiligen KI-Modells abbildet.
+Dabei handelt es sich im Gegensatz zum Training
+um strukturierte Datenanalysen.
+Die Fragestellungen haben ein klar definiertes Ergebnis:
+''Welche KV-Kunden und -Kundinnen sind gefährdet zu kündigen?'' 
+oder ''Handelt es sich bei dieser KFZ Schadensmeldung um einen Betrug?''.
+Zusätzlich sind es sich wiederholende operative Analysen, 
+die von den jeweiligen Sachbearbeitenden durchgeführt werden.
+Dafür erhalten sie eine benutzerfreundliche UI, 
+sodass keine hohe Datenkompetenz erforderlich ist.  
+
+Eine Besonderheit bei diesen beiden Datenanalysen ist,
+dass beim Einsatz der KI-Modelle offensichtlich 
+die KI-Modelle selbst und damit indirekt auch ihre Trainingsdaten
+genutzt werden.
+Da es für die Modelle allerdings keine eigene Architekturkomponente
+gibt, wird dieser Sachverhalt in Abb.~\ref{fig:datenarchitektur-regional}
+jeweils angedeutet durch gerichtete Kanten 
+von der Datenanalyse des Trainings eines KI-Modells
+zur Datenanalyse, die seinen Einsatz darstellt.
+
+Die aktuellen Daten, in denen das KI-Modell
+kündigungsgefährdete KV-Kunden und Kundinnen identifizieren soll,
+stammen alle aus strukturierten Datenquellen, 
+ausgenommen sind lediglich die semi-strukturierten Daten
+aus dem CRM-System.
+Aber auch diese werden auf dem Weg vom Data Lake in das 
+Data Warehouse in eine strukturierte Form gebracht.
+Damit liegen alle benötigten Daten tagesaktuell im Data Warehouse vor.
+Eine höhere Aktualität wird für die Analyse nicht benötigt.
+Es ist ausreichend, wenn das Modell einmal täglich oder wöchentlich
+eine Prognose über kündigungsgefährdete KV-Kunden und -Kundinnen macht.
+Mit dieser Auswertung können die Mitarbeitenden dann diese Fälle 
+besonders betreuen.
+Häufiger als ein mal täglich werden sich weder die 
+Kündigungspotenziale ändern, noch können die Mitarbeitenden
+häufiger darauf reagieren.
+Demnach liegen alle benötigten Daten für die Analyse 
+in ausreichender Aktualität im Data Warehouse vor.
+
+Trotzdem werden die Daten nicht direkt aus dem Data Warehouse
+gezogen, sondern es werden Data Marts dazwischen geschaltet.
+Das hat den Grund, dass für die Analysefragestellung
+nicht alle Daten aus dem Data Warehouse gebraucht werden.
+Die zuständigen Sachbearbeitenden sollen nur die Informationen
+erhalten, die für ihre Datenanalyse wichtig sind. 
+Zusätzlich wird angenommen, dass die Betreuung der
+privat Krankenversicherten durch die Mitarbeitenden
+der zugehörigen Filiale passiert.
+Deshalb werden in Abb.~\ref{fig:datenarchitektur-regional} 
+viele Data Marts dargestellt.
+Es soll je Filiale der Allianz in dieser Region einen eigenen 
+Data Mart geben, der nur die Daten für diese Datenanalyse bereitstellt.
+So erhalten die Mitarbeitenden einer Filiale auch nur 
+die Kündigungsprognose für die Kunden und Kundinnen, 
+die sie auch selbst betreuen. 
+Und sie können keine personenbezogenen Daten
+einsehen, die für sie irrelevant sind.
+
+Von den Datenanalysen, die den Einsatz der KI-Modelle darstellen,
+gibt es außerdem noch eine gerichtete Kante zurück zum Data Warehouse.
+Diese symbolisiert, dass die Ergebnisse der Modelle für spätere Analysen 
+abgespeichert werden.
+Das ist beispielweise interessant, um die Performance der Modelle zu überwachen.
