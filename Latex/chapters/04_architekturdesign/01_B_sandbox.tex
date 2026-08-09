@@ -1,0 +1,71 @@
+\subsection{Sandbox und Training der KI Modelle}
+
+Die beiden Data Science Use Cases, 
+sowohl die Betrugserkennung bei KFZ-Schadensfällen
+als auch die Prognose von Kündigern von privaten Krankenversicherungen,
+sollen jeweils mit einem KI-Modell umgesetzt werden, 
+welches speziell für diesen Anwendungsfall trainiert wird
+\citep[Folien~11~\&~17]{nordakademieSzenarioVersicherung}.
+Für die Datenarchitektur ergeben sich daraus
+vier Analyseanforderungen: 
+je Anwendungsfall einerseits das Training des KI-Modells
+auf historischen Daten 
+und andererseits der Einsatz des KI-Modells für 
+aktuelle Datensätze.
+Training und Einsatz der KI-Modelle bauen jeweils auf 
+unterschiedlichen Architekturkomponenten auf.
+Im folgenden wird zunächst der Teil des Trainings betrachtet.
+
+Bei dem Training der KI-Modelle für die Beiden Use Cases
+handelt es sich um unstrukturierte Datenanalysen.
+Die Muster, die der Machine Learning Algorithmus
+in den Daten findet, sind vorher noch nicht bekannt
+und die Komplexität geht weit über standardmäßiges BI Reporting hinaus.
+Trotzdem wird jeweils genau eine spezifische Analysefragestellung untersucht.
+
+Für das Training soll als ergänzende Architekturkomponente 
+eine Sandbox genutzt werden.
+In der Sandbox werden erstens lediglich Kopien der Daten abgelegt.
+Und zweitens haben die Analyseexperten und -expertinnen  
+vollen Zugriff auf die Daten und können diese manipulieren,
+ohne damit den Datenbestand im Data Warehouse oder Data Lake zu verändern.
+Diese Eigenschaften sind hier von Vorteil
+um bei der explorativen und unstrukturierten Datenanalyse
+uneingeschränkt vorgehen zu können.
+Für die Use Cases können die Daten in der Sandbox intensiv 
+und mehrmals in unterschiedlichen Arten und Weisen aufbereitet werden.
+Und es können verschiedene ML Algorithmen ausprobiert werden,
+bis das KI-Modell die gewünschte Qualität erreicht.
+Zwischen den Iterationen kann die Sandbox immer wieder neu
+aufgebaut werden, ohne, dass Daten verloren gehen.
+
+Die Trennung der Sandbox von Data Warehouse und Data Lake 
+sorgt zusätzlich dafür, dass letztere nicht durch das
+Modell-Training belastet werden, was möglicherweise 
+Performance-intensiv ist.
+Je Anwendungsfall wird außerdem eine eigene Sandbox verwendet,
+um die Datenbasen für die Projekte einzeln zusammenstellen und bearbeiten zu können.
+
+Neben dem Data Warehouse und Data Lake werden für den ersten Use Case
+(KFZ Betrugserkennung) Daten aus einer weiteren Datenquelle in die Sandbox geladen.
+Dabei handelt es sich um eine externe Fraud Datenbank.
+Dadurch wird sichergestellt, dass ausreichend viele Betrugsfälle
+in den Trainingsdaten enthalten sind.
+Da diese Daten allerdings nicht mit den Kunden der Allianz
+in Verbindung stehen, sondern nur für das Modell-Training notwendig sind,
+werden sie direkt in die Sandbox geladen.
+Eine dauerhafte Speicherung im eigenen Data Warehouse wäre überflüssig.
+
+Für das initiale Training der KI-Modelle, 
+werden die Daten manuell und unregelmäßig von den Analyseexperten und -expertinnen
+in die Sandboxen geladen.
+Aufgrund von Phänomenen wie Data Drift und Concept Drift
+ist es jedoch häufig unabdingbar die Modelle nach zu trainieren (sog. ''Retraining''),
+damit sie nicht an Performance verlieren \cite{ghosh2022}.
+Deshalb ist in Abb. \ref{fig:datenarchitektur-regional} an allen gerichteten Kanten,
+die in die Sandbox führen,
+alternativ die aktuelle Datenbereitstellung in Batchverarbeitung vermerkt.
+Diese soll das Retraining in regelmäßigen Abständen repräsentieren. 
+
+% TODO: Diagram 2 Sandboxen gefächert?
+% Trainingsdaten aus Sandbox archivieren? (Archiv/Data Lake)

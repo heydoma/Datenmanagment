@@ -110,3 +110,21 @@
   journal={arXiv preprint arXiv:2510.19957},
   year={2025}
 }
+
+@inproceedings{ghosh2022,
+author = {Ghosh, Avijit and Shanbhag, Aalok and Wilson, Christo},
+title = {FairCanary: Rapid Continuous Explainable Fairness},
+year = {2022},
+isbn = {9781450392471},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3514094.3534157},
+doi = {10.1145/3514094.3534157},
+abstract = {Systems that offer continuous model monitoring have emerged in response to (1) well-documented failures of deployed Machine Learning (ML) and Artificial Intelligence (AI) models and (2) new regulatory requirements impacting these models. Existing monitoring systems continuously track the performance of deployed ML models and compute feature importance (a.k.a. explanations) for each prediction to help developers identify the root causes of emergent model performance problems.We present Quantile Demographic Drift (QDD), a novel model bias quantification metric that uses quantile binning to measure differences in the overall prediction distributions over subgroups. QDD is ideal for continuous monitoring scenarios, does not suffer from the statistical limitations of conventional threshold-based bias metrics, and does not require outcome labels (which may not be available at runtime). We incorporate QDD into a continuous model monitoring system, called FairCanary, that reuses existing explanations computed for each individual prediction to quickly compute explanations for the QDD bias metrics. This optimization makes FairCanary an order of magnitude faster than previous work that has tried to generate feature-level bias explanations.},
+booktitle = {Proceedings of the 2022 AAAI/ACM Conference on AI, Ethics, and Society},
+pages = {307–316},
+numpages = {10},
+keywords = {continuous measurement, drift, fairness, model explanation},
+location = {Oxford, United Kingdom},
+series = {AIES '22}
+}
