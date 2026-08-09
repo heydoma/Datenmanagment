@@ -33,11 +33,13 @@ Hier werden die Daten aus den relevanten Datenquellen persistiert.
 Es wird bewusst die Trennung der beiden Architekturkomponenten gewählt,
 anstelle eines Data Lakehouse,
 aufgrund des Ungleichgewichts zwischen den strukturierten 
-und semi-/unstrukturierten Datenquellen.
+und semi-/unstrukturierten Datenquellen 
+und der Beständigkeit der Versicherungsbranche.
 
 Bei der Allianz SE gibt es eine Vielzahl strukturierter Datenquellen,
 darunter Kundendaten, Vertragsdaten, historische Schadensdaten und Betrugsfälle, 
-Leistungsabrechnungen, Fahrzeugtelemetriedaten, etc.
+Leistungsabrechnungen, Fahrzeugtelemetriedaten, etc. 
+(in Abb. \ref{fig:datenarchitektur-regional} beschrieben als ''Intern verfügbare strukturierte Daten'').
 Dazu kommen sozioökonomische Daten je Postleitzahl, 
 welche aus externen Erhebungen entnommen werden.
 Im Vergleich dazu gibt es nur wenige semi- und
@@ -80,14 +82,23 @@ ist bei den Datenquellen der Allianz
 und ihren Anforerungen demnach kein nutzbarer Vorteil.
 Stattdessen würden Daten unnötig doppelt persistiert werden
 und für jede Analyseanforderung erneut aufbereitet werden müssen.
- 
 
-
-% WIP
-Diese strukturierten Daten werden in automatisierter
-Batchverarbeitung jede Nacht 
+In automatisierter Batchverarbeitung werden jede Nacht 
 (in Abb. \ref{fig:datenarchitektur-regional} dargestellt als ''aktuell'')
-in das Data Warehouse übertragen.
+die strukturierten in das Data Warehouse und die 
+semi- und unstrukturierten Daten in den Data Lake übertragen.
+Die nächtliche Übertragung sorgt dafür, dass die technische Infrastruktur
+während der üblichen Geschäftszeiten nicht zusätzlich belastet wird.
+Eine höhere Aktualität wird zwar für den Einsatz
+des KI-Modells zur KFZ Betrugserkennung benötigt,
+das wird allerdings parallel zu Data Warehouse/Data Lake durch 
+einen Operational Data Store (ODS) ermöglicht.
 
+Ein Teil der Daten, die nach nur geringer Aufbereitung im Data Lake abgelegt werden,
+wird danach unter intensiver Aufbereitung 
+in das Data Warehouse integriert (siehe Kap. \ref{sec:pipeline}).
+So ist der Data Lake konzeptionell zumindest teilweise vor
+dem Data Warehouse gelegen. 
+Dadurch erfüllt er u.A. auch die Funktion einer Staging Area. 
 
 
