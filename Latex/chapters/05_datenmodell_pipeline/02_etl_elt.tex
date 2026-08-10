@@ -32,6 +32,15 @@ vor dem Laden entfernt. Kunden-ID und Fahrgestellnummer bleiben im geschützten
 regionalen Datenraum erhalten, weil sie für die fachlich korrekte Zuordnung
 von Schäden und Fahrzeugereignissen erforderlich sind.
 
+Vor der Integration gelten für jeden Quellenzweig verbindliche
+Datenqualitätsregeln. Dazu gehören eindeutige Schadens- und Ereignis-IDs,
+gültige Fahrgestellnummern, plausible Zeitstempel und Koordinaten sowie
+vollständige fachliche Pflichtfelder. Fehlerhafte Datensätze werden nicht
+stillschweigend verworfen, sondern mit Fehlergrund in einen Quarantänebereich
+überführt. Anzahl und Anteil zurückgewiesener Datensätze werden je Ladelauf
+protokolliert, sodass Qualitätsprobleme bis zum jeweiligen Quellsystem
+zurückverfolgt und nach einer Korrektur erneut verarbeitet werden können.
+
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=\textwidth,keepaspectratio]
@@ -74,6 +83,14 @@ und Ereigniszeit gültige Kunden-Fahrzeug-Schlüssel ermittelt. Aus
 sind notwendig, damit in den neuen Fakten die einheitlichen Schlüssel des Data
 Warehouse anstelle unterschiedlicher Quellschlüssel gespeichert werden und
 beide Faktentabellen dieselben Dimensionswerte verwenden.
+
+Der genaue Unfallzeitpunkt wird dabei nicht durch den Datumsschlüssel ersetzt.
+Nach der Vereinheitlichung auf eine gemeinsame Zeitzone wird aus ihm einerseits
+die \texttt{Datum\_ID} für kalenderbezogene Auswertungen abgeleitet;
+andererseits bleibt er als \texttt{Unfall\_Zeitstempel} in
+\texttt{Fakt\_Schadensfall} erhalten. Nur so kann die spätere
+Merkmalskonstruktion die zeitliche Nähe zwischen einem Schaden und den
+feingranularen Telemetrieereignissen berücksichtigen.
 
 Fachlich gültige, aber noch nicht zuordenbare Datensätze werden auch bei diesen
 Verbindungen nicht verworfen. Sie erhalten einen definierten
@@ -125,6 +142,15 @@ dagegen keine Namen oder Anschriften übernommen; erforderliche Identifikatoren
 werden projektbezogen pseudonymisiert und die Zuordnungstabelle verbleibt
 außerhalb der Sandbox.
 
+Bei der Merkmalskonstruktion werden zu jedem Schadensfall über den
+Kunden-Fahrzeug-Schlüssel diejenigen Telemetrieereignisse ausgewählt, deren
+Ereigniszeitstempel innerhalb eines fachlich festgelegten Zeitfensters um den
+Unfallzeitstempel liegt. Aus diesem Ausschnitt entstehen fallbezogene Merkmale,
+beispielsweise maximale Verzögerung, Airbagauslösung oder die Abweichung
+zwischen gemeldetem Unfallort und GPS-Position. Dadurch erhält das Modell
+verdichtete Eingabemerkmale, während die einzelnen Sensorereignisse in ihrer
+ursprünglichen Granularität erhalten bleiben.
+
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=\textwidth,keepaspectratio]
@@ -137,10 +163,16 @@ außerhalb der Sandbox.
 Nach Bereinigung und Merkmalskonstruktion wird die manuell bestätigte
 Betrugsentscheidung als Zielvariable von den Eingabemerkmalen getrennt. Sie
 bleibt für Training und Bewertung erhalten, wird dem Modell jedoch nicht als
-Eingabemerkmal übergeben. Anschließend erfolgt die Aufteilung in Trainings-,
-Validierungs- und Testdaten. Trainingsdaten dienen der Modellanpassung,
-Validierungsdaten der Auswahl und Optimierung, während Testdaten erst danach
-eine realistische Bewertung mit unbekannten Fällen ermöglichen
+Eingabemerkmal übergeben. Gleiches gilt für Betrugsmuster und weitere
+Informationen, die erst infolge der manuellen Prüfung entstehen. Anschließend
+erfolgt eine zeitlich geordnete Aufteilung in Trainings-, Validierungs- und
+Testdaten. Damit werden spätere Schadensfälle nicht zur Vorhersage früherer
+Fälle verwendet. Sämtliche statistisch gelernten Transformationen, etwa die
+Imputation fehlender Werte oder die Skalierung numerischer Merkmale, werden
+ausschließlich auf den Trainingsdaten angepasst und danach unverändert auf
+Validierungs- und Testdaten angewendet. Trainingsdaten dienen der
+Modellanpassung, Validierungsdaten der Auswahl und Optimierung, während
+Testdaten erst danach eine realistische Bewertung mit unbekannten Fällen ermöglichen
 \citep[S.~20--21]{gerlachSchulz2026}.
 
 Bestätigte Betrugsfälle bilden voraussichtlich die Minderheitsklasse. Ein

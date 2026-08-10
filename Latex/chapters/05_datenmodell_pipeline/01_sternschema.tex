@@ -60,7 +60,11 @@ dargestellt.
 \end{figure}
 
 In \texttt{Fakt\_Schadensfall} entspricht jeder Datensatz genau einem
-Schadensfall. Neben gemeldeter und ausgezahlter Summe enthält die Tabelle die
+Schadensfall. Neben dem Datumsschlüssel bleibt der genaue
+\texttt{Unfall\_Zeitstempel} erhalten. Er ermöglicht es, die
+Telemetrieereignisse desselben Fahrzeugs innerhalb eines fachlich festgelegten
+Zeitfensters vor und nach dem Unfall eindeutig dem Analysekontext zuzuordnen.
+Neben gemeldeter und ausgezahlter Summe enthält die Tabelle die
 für die Risikobewertung erzeugten Merkmale, beispielsweise den
 Photo-Forgery-Score, die Abweichung zwischen Bild- und Schadenort sowie den
 gesamten Fraud-Score. Die manuell bestätigte Betrugsentscheidung wird ebenfalls
@@ -72,9 +76,11 @@ In \texttt{Fakt\_Telemetrie\_Event} entspricht ein Datensatz einem einzelnen
 Sensorereignis. Diese Detailtiefe bleibt erhalten, weil beispielsweise eine
 starke Beschleunigung, Bremsung oder Airbagauslösung für die Plausibilisierung
 eines Schadens relevant sein kann. Die beiden Faktentabellen werden nicht
-direkt miteinander verbunden, sondern über ihre gemeinsamen Dimensionen
-ausgewertet. Dadurch bleiben die Telemetriedaten detailliert, ohne
-Schadensfälle zu vervielfachen.
+direkt miteinander verbunden. Stattdessen werden Telemetrieereignisse über die
+gemeinsame Kunden-Fahrzeug-Dimension und den Vergleich von Ereignis- und
+Unfallzeitstempel ausgewählt. Dadurch bleiben die Telemetriedaten detailliert,
+ohne Schadensfälle zu vervielfachen oder Ereignisse allein aufgrund desselben
+Kalendertags einem Schaden zuzuordnen.
 
 \texttt{Dim\_Kunde\_Fahrzeug} kombiniert Kunden- und Fahrzeugkontext, weil
 beide Ereignisarten einem konkreten Fahrzeug eines Kunden zugeordnet werden
@@ -101,7 +107,10 @@ sind. \texttt{Dim\_Betrugsmuster} bündelt die in den historischen
 Schadensdaten dokumentierten Angaben zu Betrugskategorie, Vorgehensweise und
 Risikoklasse. Die Auslagerung verhindert wiederholte Beschreibungen in der
 Faktentabelle und ermöglicht einheitliche Auswertungen nach bestätigten
-Betrugsmustern.
+Betrugsmustern. Da diese Angaben ebenso wie die bestätigte Betrugsentscheidung
+erst nach der manuellen Prüfung vorliegen, dienen sie ausschließlich als
+Trainingslabel und zur nachträglichen Auswertung. Sie werden nicht als
+Eingabemerkmale für die Bewertung eines neuen Schadensfalls verwendet.
 
 Technisch erzeugte Primärschlüssel entkoppeln das Warehouse von den
 unterschiedlichen Schlüsseln der Quellsysteme und ermöglichen die
