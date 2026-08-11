@@ -15,6 +15,11 @@ qualitätsgesicherten Daten aus dem Data Warehouse in der Data-Science-Sandbox
 zu einem Datensatz zusammen, mit dem das Betrugserkennungsmodell trainiert und
 bewertet werden kann.
 
+Die externe Fraud-Datenbank bildet dabei eine Ausnahme. Da ihre technische
+Aufbereitung außerhalb des betrachteten Datenflusses liegt, ist sie nicht
+Bestandteil der dargestellten Pipelines, sondern wird als bereits
+bereitgestellter externer Datenbestand direkt in die Sandbox eingebunden.
+
 In allen drei Pipelines werden die Daten aus den Quellen extrahiert, vor dem
 Laden aufbereitet und an das jeweilige Zielschema angepasst
 \citep[S.~18--23]{schulz2024}. Diese Reihenfolge wurde gewählt, weil das Galaxy
