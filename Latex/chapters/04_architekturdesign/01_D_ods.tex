@@ -1,7 +1,7 @@
-\subsection{Operational Data Store und Einsatz des KI-Modells zur KFZ Betrugserkennung}
+\subsection{Operational Data Store und Einsatz des KI-Modells zur KFZ-Betrugserkennung}
 
 Wie beschrieben gibt es auch beim Einsatz des KI-Modells zur
-KFZ Betrugserkennung gerichtete Kanten vom Modell-Training 
+KFZ-Betrugserkennung gerichtete Kanten vom Modell-Training 
 zu dieser Datenanalyse und von ihr zum Data Warehouse.
 Auch hier kommen indirekt die Trainingsdaten zum Einsatz
 und die Ergebnisse des Modells werden für zukünftige Analysen persistiert.
@@ -20,7 +20,7 @@ dass die Daten zu einem Schadensfall gesammelt in den ODS geladen werden,
 sobald alle Daten zu diesem Schadensfall in den Datenquellen vorliegen.
 Ab diesem Zeitpunkt können die Sachbearbeitenden 
 damit beginnen den Fall zu bearbeiten. 
-Dabei ist es durchaus denkbar, dass ein Schadensfall
+Dabei ist es denkbar, dass ein Schadensfall
 noch am Tag, an dem er gemeldet wird, auch bearbeitet wird.
 Deshalb wird die höhere Aktualität des ODS benötigt, 
 im Vergleich zu den anderen Komponenten dieser Architektur,
@@ -48,11 +48,11 @@ Da die Daten zusätzlich in Data Warehouse und Data Lake
 historisiert werden, gehen sie dadurch nicht verloren.
 
 Abschließend wird in dem Szenario der Allianz angenommen,
-dass die KFZ Schadenfälle weder für die gesamte Region
+dass die KFZ-Schadenfälle weder für die gesamte Region
 zentral noch in jeder Filiale einzeln bearbeitet werden.
 Stattdessen gibt es mehrere Schadenszentren pro Region,
 die jeweils für einen Teil der Region 
-oder für unterschiedliche Schadensarten (Haftpficht, Kasko, etc.) zuständig sind.
+oder für unterschiedliche Schadensarten (Haftpflicht, Kasko, etc.) zuständig sind.
 Teilweise werden Fälle auch nach Auslastung der Schadenszentren verteilt. 
 Jedes der Schadenszentren erhält einen eigenen ODS, sodass 
 personenbezogene Daten nur für die Sachbearbeitenden einsehbar sind, 

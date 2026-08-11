@@ -19,7 +19,7 @@ Im Vergleich dazu gibt es nur wenige semi- und
 unstrukturierte Datenquellen, wie z.B. Fotos, 
 die den Schadensmeldungen beigefügt werden.
 Dementsprechend steht die Funktion eines Data Warehouse
-für die Allianz deutlich stärker im Fokus, als die des Data Lake.
+für die Allianz deutlich stärker im Fokus als die des Data Lake.
 Vor allem da die Daten des Data Warehouse neben den Data Science Anwendungsfällen
 auch für diverse BI Anforderungen genutzt werden (siehe Kap \ref{sec:globale-architektur}).
 Um die Funktion eines Data Warehouse optimal zu erfüllen,
@@ -37,7 +37,7 @@ Anforderungen gewählt werden.
 Außerdem werden in einem Data Lakehouse vorerst alle Daten,
 unabhängig von ihrer Struktur,
 in Rohform abgelegt werden, um sie dann für Analysen
-oder erneute Persistierung aufzubereiten.
+oder erneutes Persistieren aufzubereiten.
 Dadurch kann mit sich häufig ändernden Datenquellen umgegangen werden
 und die Daten können vielfältiger genutzt werden.
 Jedoch sind die strukturierten Daten in diesem Szenario 
@@ -52,7 +52,7 @@ Allerdings ist es nicht notwendig die Daten je Analyseanforderung
 in völlig unterschiedliche Schemata zu überführen. 
 Die höhere Agilität eines Data Lakehouse
 ist bei den Datenquellen der Allianz 
-und ihren Anforerungen demnach kein nutzbarer Vorteil.
+und ihren Anforderungen demnach kein nutzbarer Vorteil.
 Stattdessen würden Daten unnötig doppelt persistiert werden
 und für jede Analyseanforderung erneut aufbereitet werden müssen.
 
@@ -63,7 +63,7 @@ semi- und unstrukturierten Daten in den Data Lake übertragen.
 Die nächtliche Übertragung sorgt dafür, dass die technische Infrastruktur
 während der üblichen Geschäftszeiten nicht zusätzlich belastet wird.
 Eine höhere Aktualität wird zwar für den Einsatz
-des KI-Modells zur KFZ Betrugserkennung benötigt,
+des KI-Modells zur KFZ-Betrugserkennung benötigt,
 das wird allerdings parallel zu Data Warehouse/Data Lake durch 
 einen Operational Data Store (ODS) ermöglicht.
 
