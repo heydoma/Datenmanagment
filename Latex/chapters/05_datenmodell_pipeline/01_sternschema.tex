@@ -2,7 +2,7 @@
 \label{sec:sternschema}
 
 Für die Betrugserkennung werden die in
-Abbildung~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder,
+Abbildung~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder, % ich habe "Abbildung" in meinen Texten immer mit "Abb." abgekürzt, das sollten wir einheitlich machen. Welche Variante wir nehmen ist mir egal
 Gutachten, EXIF- und Wetterdaten sowie externe Kaufkraftdaten werden zunächst
 im Data Lake gespeichert. Der folgende Entwurf konzentriert sich auf die
 strukturierte Datenhaltung im regionalen Data Warehouse. Das dort eingesetzte
@@ -32,7 +32,7 @@ Abfrageeigenschaften bietet \citep[S.~38]{gerlachSchulz2026}.
 
 Ein einzelnes Sternschema reicht jedoch nicht aus. Schadensfälle und
 Telemetrieereignisse werden unterschiedlich detailliert erfasst: Zu einem Schaden
-gehören genau eine gemeldete und eine ausgezahlte Summe, während während einer
+gehören genau eine gemeldete und eine ausgezahlte Summe, während während einer % Vorschlag: statt "während während" lieber "wohingegen während"
 Fahrt viele Sensorereignisse mit eigenem Zeitpunkt, Standort und Messwerten
 entstehen. Würden beide Ereignisarten in einer Faktentabelle gespeichert,
 müsste der Schaden für jedes Telemetrieereignis wiederholt werden. Dadurch
