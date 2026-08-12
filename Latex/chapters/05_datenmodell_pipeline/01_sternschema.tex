@@ -2,7 +2,7 @@
 \label{sec:sternschema}
 
 Für die Betrugserkennung werden die in
-Abbildung~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder, % ich habe "Abbildung" in meinen Texten immer mit "Abb." abgekürzt, das sollten wir einheitlich machen. Welche Variante wir nehmen ist mir egal
+Abb.~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder,
 Gutachten, EXIF- und Wetterdaten sowie externe Kaufkraftdaten werden zunächst
 im Data Lake gespeichert. Der folgende Entwurf konzentriert sich auf die
 strukturierte Datenhaltung im regionalen Data Warehouse. Das dort eingesetzte
@@ -32,7 +32,7 @@ Abfrageeigenschaften bietet \citep[S.~38]{gerlachSchulz2026}.
 
 Ein einzelnes Sternschema reicht jedoch nicht aus. Schadensfälle und
 Telemetrieereignisse werden unterschiedlich detailliert erfasst: Zu einem Schaden
-gehören genau eine gemeldete und eine ausgezahlte Summe, während während einer % Vorschlag: statt "während während" lieber "wohingegen während"
+gehören genau eine gemeldete und eine ausgezahlte Summe, wohingegen während einer
 Fahrt viele Sensorereignisse mit eigenem Zeitpunkt, Standort und Messwerten
 entstehen. Würden beide Ereignisarten in einer Faktentabelle gespeichert,
 müsste der Schaden für jedes Telemetrieereignis wiederholt werden. Dadurch
@@ -47,7 +47,7 @@ dieselbe fachliche Bedeutung besitzen. Gemeinsam verwendete Dimensionen werden
 als \emph{Conformed Dimensions} bezeichnet. Werden mehrere Sternschemata über
 solche Dimensionen verbunden, entsteht ein \emph{Galaxy Schema}
 beziehungsweise Galaxieschema \citep[S.~47]{gerlachSchulz2026}. Das für die
-Betrugserkennung entworfene Modell ist in Abbildung~\ref{fig:galaxy-fraud}
+Betrugserkennung entworfene Modell ist in Abb.~\ref{fig:galaxy-fraud}
 dargestellt.
 
 \begin{figure}[H]
@@ -67,7 +67,9 @@ Zeitfensters vor und nach dem Unfall eindeutig dem Analysekontext zuzuordnen.
 Neben gemeldeter und ausgezahlter Summe enthält die Tabelle die
 für die Risikobewertung erzeugten Merkmale, beispielsweise den
 Photo-Forgery-Score, die Abweichung zwischen Bild- und Schadenort sowie den
-gesamten Fraud-Score. Die manuell bestätigte Betrugsentscheidung wird ebenfalls
+gesamten Fraud-Score. Modellversion und Bewertungszeitstempel dokumentieren,
+mit welchem Modell und zu welchem Zeitpunkt dieser Score erzeugt wurde. Die
+manuell bestätigte Betrugsentscheidung wird ebenfalls
 am Schadensfall gespeichert, weil sie die Zielvariable für das spätere
 überwachte Lernen bildet. Sie wird bei der Modellbildung von den
 Eingabemerkmalen getrennt.

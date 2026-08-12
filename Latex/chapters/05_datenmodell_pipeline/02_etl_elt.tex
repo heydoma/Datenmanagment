@@ -11,7 +11,7 @@ bleibt die ursprüngliche Informationsbasis für spätere Auswertungen erhalten
 und die Trennung zwischen Rohdaten und bereits aufbereiteten Daten bleibt
 nachvollziehbar. Die zweite Pipeline gewinnt aus diesen Rohdaten die für das
 Data Warehouse benötigten Merkmale. Die dritte Pipeline führt schließlich die
-qualitätsgesicherten Daten aus dem Data Warehouse in der Data-Science-Sandbox
+qualitätsgesicherten Daten aus dem Data Warehouse in der Sandbox
 zu einem Datensatz zusammen, mit dem das Betrugserkennungsmodell trainiert und
 bewertet werden kann.
 
@@ -28,14 +28,17 @@ Schema und die für die Betrugserkennung benötigten Merkmale bereits feststehen
 \medskip
 \noindent\textbf{Pipeline 1: Strukturierte Quellen zum Data Warehouse.}
 
-Die erste Pipeline in Abbildung~\ref{fig:pipeline-strukturiert-dwh} integriert
-Kunden- und Vertragsdaten, Schadensdaten, historische Schadens- und
+Die erste Pipeline in Abb.~\ref{fig:pipeline-strukturiert-dwh} integriert
+Kunden- und Fahrzeugdaten aus dem kombinierten Kunden- und
+Vertragsquellsystem, Schadensdaten, historische Schadens- und
 Prüfergebnisse sowie Fahrzeugtelemetrie. Jeder Quellenzweig wird zunächst
 separat extrahiert, bereinigt und von Dubletten befreit. Nicht benötigte
 direkte Identifikatoren wie Name, Anschrift und Geburtsdatum werden bereits
 vor dem Laden entfernt. Kunden-ID und Fahrgestellnummer bleiben im geschützten
 regionalen Datenraum erhalten, weil sie für die fachlich korrekte Zuordnung
 von Schäden und Fahrzeugereignissen erforderlich sind.
+Vertrags-ID, Tarif-Code und Beitrag werden im exemplarischen Galaxy Schema
+nicht persistiert, da sie für diese Zuordnung nicht erforderlich sind.
 
 Vor der Integration gelten für jeden Quellenzweig verbindliche
 Datenqualitätsregeln. Dazu gehören eindeutige Schadens- und Ereignis-IDs,
@@ -106,7 +109,7 @@ Stammdaten aber nicht alle fehlenden Zuordnungen verhindern.
 \medskip
 \noindent\textbf{Pipeline 2: Data Lake zum Data Warehouse.}
 
-Die zweite Pipeline in Abbildung~\ref{fig:pipeline-lake-dwh} trennt die
+Die zweite Pipeline in Abb.~\ref{fig:pipeline-lake-dwh} trennt die
 aufwendige Verarbeitung von Fotos und Rohdaten von der Integration der
 strukturierten Quellsysteme. Ihr Ziel ist es, die im Data Lake gespeicherten
 semi-strukturierten und unstrukturierten Rohdaten in strukturierte Merkmale für
@@ -135,10 +138,9 @@ Flexibilität des Data Lake für spätere Analysen und liefert gleichzeitig ein
 stabiles, abfrageoptimiertes Schema für wiederkehrende Fraud-Auswertungen.
 
 \medskip
-\noindent\textbf{Pipeline 3: Data Warehouse zur Data-Science-Sandbox.}
-% Ich würde es konsistent nur "Sandbox" nennen, statt "Data-Science-Sandbox"
+\noindent\textbf{Pipeline 3: Data Warehouse zur Sandbox.}
 
-Die dritte Pipeline in Abbildung~\ref{fig:pipeline-dwh-sandbox} stellt einen
+Die dritte Pipeline in Abb.~\ref{fig:pipeline-dwh-sandbox} stellt einen
 modellierbaren Datensatz aus den qualitätsgesicherten und historisierten
 DWH-Daten her. Die Pseudonymisierung erfolgt erst an dieser Grenze. Innerhalb
 des geschützten regionalen Data Warehouse bleibt die Zuordnung zum realen
@@ -161,7 +163,7 @@ ursprünglichen Granularität erhalten bleiben.
   \centering
   \includegraphics[width=\textwidth,keepaspectratio]
     {images/Pipeline_3_DWH_Sandbox.pdf}
-  \caption{Pipeline 3: Regionales Data Warehouse zur Data-Science-Sandbox
+  \caption{Pipeline 3: Regionales Data Warehouse zur Sandbox
     (eigene Darstellung)}
   \label{fig:pipeline-dwh-sandbox}
 \end{figure}
