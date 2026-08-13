@@ -3,9 +3,11 @@
 
 Für die Betrugserkennung werden die in
 Abb.~\ref{fig:quelldaten-fraud} dargestellten Quellen genutzt. Bilder,
-Gutachten, EXIF- und Wetterdaten sowie externe Kaufkraftdaten werden zunächst
-im Data Lake gespeichert. Der folgende Entwurf konzentriert sich auf die
-strukturierte Datenhaltung im regionalen Data Warehouse. Das dort eingesetzte
+Gutachten, EXIF- und Wetterdaten werden zunächst im Data Lake gespeichert.
+Die strukturierten externen Kaufkraftdaten werden dagegen gemeinsam mit den
+weiteren strukturierten Quellen direkt für das regionale Data Warehouse
+aufbereitet. Der folgende Entwurf konzentriert sich auf die strukturierte
+Datenhaltung im regionalen Data Warehouse. Das dort eingesetzte
 Galaxy Schema enthält deshalb nicht die Rohdateien selbst, sondern nur die für
 wiederkehrende Betrugsanalysen benötigten Daten und daraus abgeleiteten
 Merkmale.

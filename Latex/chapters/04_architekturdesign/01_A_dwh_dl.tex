@@ -30,6 +30,9 @@ dieses Teils der Architektur erhöhen und könnte ggf.
 die reine Data Warehouse Funktion beeinträchtigen.
 Der Data Lake hingegen wird im Vergleich zum Data Warehouse
 weniger Datenquellen und kleinere Datenmengen verarbeiten.
+% Formulierungsvorschlag: Der Data Lake verarbeitet im Vergleich zum Data
+% Warehouse zwar weniger Datenquellen, ist aufgrund speicherintensiver Fotos und
+% Dokumente jedoch auf andere Datenstrukturen und Zugriffsanforderungen ausgerichtet.
 Durch eine saubere Trennung der Architekturkomponenten
 kann jeweils eine passende Technologie für die unterschiedlichen
 Anforderungen gewählt werden.
@@ -55,6 +58,11 @@ ist bei den Datenquellen der Allianz
 und ihren Anforderungen demnach kein nutzbarer Vorteil.
 Stattdessen würden Daten unnötig doppelt persistiert werden
 und für jede Analyseanforderung erneut aufbereitet werden müssen.
+% Formulierungsvorschlag: Die höhere Agilität eines Data Lakehouse bietet bei den
+% überwiegend stabilen strukturierten Quellen in diesem Szenario nur begrenzten
+% Mehrwert. Durch getrennte Komponenten lassen sich stattdessen die unterschiedlichen
+% Workloads, Zugriffsanforderungen und Technologien von Data Warehouse und Data Lake
+% klar voneinander abgrenzen.
 
 In automatisierter Batchverarbeitung werden jede Nacht 
 (in Abb. \ref{fig:datenarchitektur-regional} dargestellt als ''aktuell'')
@@ -72,4 +80,4 @@ wird danach unter intensiver Aufbereitung
 in das Data Warehouse integriert (siehe Kap. \ref{sec:pipeline}).
 So ist der Data Lake konzeptionell zumindest teilweise vor
 dem Data Warehouse gelegen. 
-Dadurch erfüllt er u.A. auch die Funktion einer Staging Area. 
+Dadurch erfüllt er u.A. auch die Funktion einer Staging Area.

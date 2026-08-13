@@ -14,6 +14,10 @@ Data Warehouse benötigten Merkmale. Die dritte Pipeline führt schließlich die
 qualitätsgesicherten Daten aus dem Data Warehouse in der Sandbox
 zu einem Datensatz zusammen, mit dem das Betrugserkennungsmodell trainiert und
 bewertet werden kann.
+Die drei Pipelines konkretisieren damit die historische Datenaufbereitung für
+das regionale Datenmodell und das Modelltraining. Der hochaktuelle ODS-Pfad
+für den operativen Einsatz des Betrugserkennungsmodells ist nicht Bestandteil
+dieses Abschnitts.
 
 Die externe Fraud-Datenbank bildet dabei eine Ausnahme. Da ihre technische
 Aufbereitung außerhalb des betrachteten Datenflusses liegt, ist sie nicht
@@ -30,9 +34,10 @@ Schema und die für die Betrugserkennung benötigten Merkmale bereits feststehen
 
 Die erste Pipeline in Abb.~\ref{fig:pipeline-strukturiert-dwh} integriert
 Kunden- und Fahrzeugdaten aus dem kombinierten Kunden- und
-Vertragsquellsystem, Schadensdaten, historische Schadens- und
-Prüfergebnisse sowie Fahrzeugtelemetrie. Jeder Quellenzweig wird zunächst
-separat extrahiert, bereinigt und von Dubletten befreit. Nicht benötigte
+Vertragsquellsystem, externe Kaufkraftdaten je Postleitzahl, Schadensdaten,
+historische Schadens- und Prüfergebnisse sowie Fahrzeugtelemetrie. Jeder
+Quellenzweig wird zunächst separat extrahiert, bereinigt und von Dubletten
+befreit. Nicht benötigte
 direkte Identifikatoren wie Name, Anschrift und Geburtsdatum werden bereits
 vor dem Laden entfernt. Kunden-ID und Fahrgestellnummer bleiben im geschützten
 regionalen Datenraum erhalten, weil sie für die fachlich korrekte Zuordnung
@@ -60,6 +65,11 @@ zurückverfolgt und nach einer Korrektur erneut verarbeitet werden können.
 
 Die Kunden-Fahrzeug-Dimension wird vor den Faktentabellen geladen, damit ihre
 Schlüssel bei der anschließenden Integration nachgeschlagen werden können.
+Die externen Kaufkraftdaten werden vereinheitlicht und über die Postleitzahl
+dem Kundenkontext zugeordnet, bevor die Kunden-Fahrzeug-Dimension geladen wird.
+In Abb.~\ref{fig:pipeline-strukturiert-dwh} sind sie aus Gründen der
+Übersichtlichkeit als zusätzlicher strukturierter Eingang des Kunden- und
+Vertragszweigs dargestellt.
 Schadensdaten bilden die führende Datenmenge für
 \texttt{Fakt\_Schadensfall}. Die historisierte Kunden-Fahrzeug-Zuordnung wird
 über Kunden-ID, Fahrgestellnummer und den zum Unfallzeitpunkt gültigen Zeitraum
@@ -117,8 +127,8 @@ das Galaxy Schema zu überführen. Schadensfotos und Gutachten verbleiben dabei
 als Originale im Data Lake. Aus Bildinhalt und Metadaten werden nur die für den
 Anwendungsfall benötigten Merkmale extrahiert. Dazu gehören insbesondere ein
 Hinweis auf mögliche Bildmanipulation sowie der Vergleich von Aufnahme- und
-Unfallort. Wetter- und Kaufkraftwerte werden vereinheitlicht und über
-Zeitpunkt beziehungsweise Postleitzahl zugeordnet.
+Unfallort. Wetterwerte werden vereinheitlicht und über Zeitpunkt und Ort
+zugeordnet.
 
 \begin{figure}[!htbp]
   \centering
@@ -132,8 +142,7 @@ Zeitpunkt beziehungsweise Postleitzahl zugeordnet.
 In das Data Warehouse werden nicht die unstrukturierten Dateien dupliziert,
 sondern die reproduzierbaren strukturierten Ergebnisse geladen. Der
 Photo-Forgery-Score und die Ortsabweichung ergänzen den Schadensfakt,
-Wettermerkmale werden in \texttt{Dim\_Wetter} und regionale Kaufkraftmerkmale
-in \texttt{Dim\_Kunde\_Fahrzeug} bereitgestellt. Diese Trennung bewahrt die
+Wettermerkmale werden in \texttt{Dim\_Wetter} bereitgestellt. Diese Trennung bewahrt die
 Flexibilität des Data Lake für spätere Analysen und liefert gleichzeitig ein
 stabiles, abfrageoptimiertes Schema für wiederkehrende Fraud-Auswertungen.
 
@@ -142,7 +151,11 @@ stabiles, abfrageoptimiertes Schema für wiederkehrende Fraud-Auswertungen.
 
 Die dritte Pipeline in Abb.~\ref{fig:pipeline-dwh-sandbox} stellt einen
 modellierbaren Datensatz aus den qualitätsgesicherten und historisierten
-DWH-Daten her. Die Pseudonymisierung erfolgt erst an dieser Grenze. Innerhalb
+DWH-Daten her. Die zuvor aus dem Data Lake gewonnenen Merkmale werden dabei
+aus dem Data Warehouse übernommen. Ein direkter Zugriff der Sandbox auf
+Rohdaten im Data Lake bleibt für explorative Analysen möglich, ist jedoch
+nicht Bestandteil der standardisierten Pipeline 3. Die Pseudonymisierung
+erfolgt erst an dieser Grenze. Innerhalb
 des geschützten regionalen Data Warehouse bleibt die Zuordnung zum realen
 Schadensfall erhalten, damit Prüfergebnisse zurückgespielt und neue
 Betrugsbestätigungen korrekt gespeichert werden können. In die Sandbox werden
