@@ -37,13 +37,8 @@ Allerdings arbeitet das Real-Time-Processing nach dem Push-Prinzip,
 und für diesen Anwendungsfall ist es nicht notwendig,
 dass die Anwendenden aktiv und automatisiert über die Ergebnisse 
 des KI-Modells informiert werden. 
-% Alternativer Formulierungsvorschlag:
-% Aufgrund der hohen Aktualitätsanforderung wäre grundsätzlich auch
-% Real-Time-Processing denkbar. Für diesen Anwendungsfall ist jedoch keine
-% kontinuierliche Verarbeitung erforderlich, da die Einschätzung des KI-Modells
-% erst bei der aktiven Bearbeitung eines vollständig vorliegenden Schadensfalls
-% angefragt wird. Die fallbezogene und hochaktuelle Bereitstellung der Daten
-% über den ODS ist deshalb ausreichend.
+Die fallbezogene und hochaktuelle Bereitstellung der Daten
+über den ODS ist deshalb ausreichend.
 
 Die Architektur sieht außerdem vor,
 dass die Daten über den aktuellen Schadensfall
@@ -53,8 +48,6 @@ So sind zu jedem Zeitpunkt nur die aktuell relevanten Daten
 im ODS persistiert und der Speicherbedarf bleibt gering.
 Da die Daten zusätzlich in Data Warehouse und Data Lake
 historisiert werden, gehen sie dadurch nicht verloren.
-% Optional zur Präzisierung: Die Historisierung erfolgt zusätzlich und unabhängig
-% vom ODS über die regulären Ladewege in Data Warehouse und Data Lake.
 
 Abschließend wird in dem Szenario der Allianz angenommen,
 dass die Kfz-Schadenfälle weder für die gesamte Region
